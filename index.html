@@ -1,192 +1,2134 @@
 <!DOCTYPE html>
-<!-- 声明文档类型为HTML5，指定语言为英文（如需中文可改为zh-CN） -->
-<html lang="en">
-<!-- 头部区域：包含页面元信息、标题、样式等，不直接显示在页面上 -->
+<html lang="zh-TW">
 <head>
-    <!-- 元标签：指定字符编码为UTF-8（支持所有中文和特殊字符，避免乱码） -->
     <meta charset="UTF-8">
-    <!-- 响应式元标签：适配移动设备，设置视口宽度为设备宽度，初始缩放比例1.0 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 页面标题：显示在浏览器标签栏上 -->
-    <title>完整的HTML5示例页面</title>
-    <!-- 内部CSS样式：优化页面布局和美观度，修复默认样式的缺陷 -->
+    <title>智慧點餐系統 | 全螢幕演示</title>
+    
+    <!-- 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* 重置浏览器默认边距和内边距，统一盒模型 */
-        * {
+        /* CSS變數定義 */
+        :root {
+            --primary: #8B4513;
+            --secondary: #D2691E;
+            --accent: #FF6B6B;
+            --light: #FFF8DC;
+            --dark: #4A2C2A;
+            --bianco: #fff;
+            --nero: #000;
+            --colore-uno: #f7f6f5;
+            --colore-due: #bcb5b1;
+            --colore-tre: #77726c;
+            --colore-quattro: #202123;
+            --colore-cinque: #cb334f;
+            --colore-sette: #67876a;
+            --colore-nove: #821427;
+            --chart-blue: #1e88e5;
+            --chart-green: #43a047;
+            --chart-red: #e53935;
+            --chart-orange: #fb8c00;
+        }
+
+        /* 基礎樣式 */
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* 页面主体样式：设置字体、背景色、最小高度，居中内容 */
-        body {
-            font-family: "Microsoft YaHei", Arial, sans-serif;
-            background-color: #f5f5f5;
-            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
             line-height: 1.6;
-            color: #333;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            background: var(--colore-quattro);
+            color: var(--colore-due);
         }
 
-        /* 头部导航栏样式：固定顶部、阴影效果、背景白色 */
-        header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 1rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 999;
+        h1, h2, h3, h4, h5 {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 600;
+            color: var(--bianco);
         }
 
-        /* 导航栏标题样式 */
-        header h1 {
-            font-size: 1.8rem;
-            color: #2c3e50;
-        }
-
-        /* 导航链接样式 */
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-            margin-top: 1rem;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #3498db;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        nav a:hover {
-            color: #2980b9;
-        }
-
-        /* 主要内容区域：居中、限制宽度、添加内边距和背景白 */
-        main {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        /* 内容区块样式：底部间距 */
-        .content-section {
-            margin-bottom: 2.5rem;
-        }
-
-        .content-section h2 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #3498db;
-        }
-
-        .content-section p {
-            margin-bottom: 1rem;
-            text-align: justify;
-        }
-
-        /* 图片样式：响应式缩放，居中显示，圆角效果 */
-        .responsive-img {
-            width: 100%;
-            max-width: 800px;
+        img {
+            max-width: 100%;
             height: auto;
-            display: block;
-            margin: 1.5rem auto;
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: calc(100% - 40px);
+        }
+
+        /* 全螢幕影片容器 */
+        .fullscreen-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9998;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .youtube-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .youtube-container iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 56.25vw; /* 16:9 比例 */
+            min-height: 100vh;
+            min-width: 177.78vh; /* 16:9 比例 */
+            transform: translate(-50%, -50%);
+            pointer-events: none; /* 防止點擊互動 */
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+
+        .youtube-controls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            pointer-events: none; /* 防止干擾影片播放 */
+        }
+
+        .skip-video-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+            pointer-events: auto; /* 允許點擊按鈕 */
+            z-index: 4;
+        }
+
+        .skip-video-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* 視頻背景 */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .video-background iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100vw;
+            min-height: 100vh;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            pointer-events: none;
+        }
+
+        .video-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 10, 42, 0.85);
+        }
+
+        /* 載入指示器 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            color: white;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid var(--accent);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 全屏提示 */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .fullscreen-button {
+            padding: 15px 30px;
+            background: var(--colore-cinque);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .fullscreen-button:hover {
+            background: #ff8833;
+            transform: scale(1.05);
+        }
+
+        /* 警告窗口 */
+        .violation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            color: white;
+        }
+
+        .violation-content {
+            background: #2a2a40;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            max-width: 80%;
+            border: 2px solid #ff6600;
+        }
+
+        .violation-close-button {
+            padding: 12px 25px;
+            background: #ff6600;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* 視頻控制 */
+        .video-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .video-controls button {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* 保護徽章 */
+        .protection-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        /* 左側功能表 - 隱藏式設計 */
+        .left-auto-menu {
+            position: fixed;
+            left: -170px; /* 隱藏狀態 */
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            transition: left 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .left-auto-menu:hover {
+            left: 0; /* 滑鼠懸停時顯示 */
+        }
+
+        .left-menu-toggle {
+            width: 50px;
+            height: 50px;
+            background-color: var(--colore-quattro);
+            color: var(--bianco);
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 1px solid var(--colore-due);
+            position: absolute;
+            right: -50px;
+            top: 0;
+        }
+
+        .left-menu-content {
+            background-color: var(--colore-quattro);
+            border-radius: 0 8px 8px 0;
+            padding: 20px 15px;
+            width: 170px;
+            border: 1px solid var(--colore-due);
+            border-left: none;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .left-menu-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left-menu-nav li {
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s ease;
+            transition-delay: calc(var(--item-index) * 0.1s);
+        }
+
+        .left-auto-menu:hover .left-menu-nav li {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .left-menu-nav li:nth-child(1) { --item-index: 1; }
+        .left-menu-nav li:nth-child(2) { --item-index: 2; }
+        .left-menu-nav li:nth-child(3) { --item-index: 3; }
+        .left-menu-nav li:nth-child(4) { --item-index: 4; }
+        .left-menu-nav li:nth-child(5) { --item-index: 5; }
+        .left-menu-nav li:nth-child(6) { --item-index: 6; }
+        .left-menu-nav li:nth-child(7) { --item-index: 7; }
+
+        .left-menu-nav a {
+            color: var(--colore-due);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            transition: all 0.3s;
             border-radius: 4px;
         }
 
-        /* 按钮样式：美化并添加hover效果 */
-        .btn {
-            display: inline-block;
-            padding: 0.8rem 1.5rem;
-            background-color: #3498db;
-            color: #ffffff;
+        .left-menu-nav a:hover {
+            color: var(--accent);
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .left-menu-nav i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .left-menu-nav span {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* 頭部 */
+        header {
+            background-color: rgba(32, 33, 35, 0.95);
+            padding: 15px 20px;
+            position: fixed;
+            width: 100vw;
+            top: 0;
+            z-index: 1000;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--colore-tre);
+        }
+
+        .logo {
+            width: 250px;
+        }
+
+        .logo-text {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2rem;
+            color: var(--bianco);
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .logo-subtext {
+            font-size: 0.9rem;
+            color: var(--colore-due);
+            margin-top: -5px;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .language-switcher {
+            color: var(--colore-due);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .language-switcher span {
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        .language-switcher span.active {
+            background-color: var(--colore-quattro);
+            color: var(--bianco);
+        }
+
+        .contact-btn {
+            background-color: var(--colore-sette);
+            color: white;
+            padding: 8px 25px;
             text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
             border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .contact-btn:hover {
+            background-color: var(--colore-nove);
+            transform: translateY(-2px);
+        }
+
+        /* 隱藏功能表 */
+        .hidden-menu-btn {
+            display: none;
+            color: white;
+            font-size: 24px;
+            background: none;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            z-index: 1001;
         }
 
-        .btn:hover {
-            background-color: #2980b9;
+        .hidden-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
 
-        /* 页脚样式：居中、背景深色、文字浅色 */
-        footer {
-            background-color: #2c3e50;
-            color: #ffffff;
+        .hidden-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: var(--colore-quattro);
+            z-index: 1000;
+            padding: 80px 30px 30px;
+            transition: right 0.3s ease;
+            border-left: 1px solid var(--colore-tre);
+            overflow-y: auto;
+        }
+
+        .hidden-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hidden-menu-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .hidden-menu-nav li {
+            margin-bottom: 15px;
+        }
+
+        .hidden-menu-nav a {
+            color: var(--colore-due);
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+            padding: 10px 0;
+            transition: color 0.3s;
+            border-bottom: 1px solid rgba(188, 181, 177, 0.1);
+        }
+
+        .hidden-menu-nav a:hover {
+            color: var(--accent);
+        }
+
+        /* 圖片輪播區塊 */
+        .image-slider-section {
+            padding: 80px 0;
+            position: relative;
+            z-index: 10;
+            width: 100vw;
+            display: none;
+        }
+
+        .slider-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 2px solid var(--colore-tre);
+        }
+
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 600px;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background-color: #000;
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .slider-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .slider-btn:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: scale(1.1);
+        }
+
+        .slide-indicators {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .indicator.active {
+            background: var(--accent);
+            transform: scale(1.2);
+        }
+
+        /* 內容區塊 */
+        .content-section {
+            padding: 120px 0;
+            position: relative;
+            z-index: 10;
+            width: 100vw;
+            display: none;
+        }
+
+        .dark-bg {
+            background-color: rgba(32, 33, 35, 0.95);
+            color: var(--colore-due);
+        }
+
+        .darker-bg {
+            background-color: rgba(20, 21, 23, 0.98);
+            color: var(--colore-due);
+            border-top: 1px solid var(--colore-tre);
+            border-bottom: 1px solid var(--colore-tre);
+        }
+
+        .light-bg {
+            background-color: rgba(247, 246, 245, 0.95);
+            color: var(--colore-quattro);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 30px;
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
+            position: relative;
+            padding-bottom: 20px;
         }
 
-        /* 响应式适配：小屏幕设备优化布局 */
-        @media (max-width: 768px) {
-            header {
-                padding: 1rem;
-            }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--colore-cinque);
+        }
 
-            nav ul {
+        .section-text {
+            max-width: 900px;
+            margin: 0 auto 40px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* 比較表格 */
+        .comparison-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(32,33,35,0.98) 0%, rgba(20,21,23,0.98) 100%);
+            display: none;
+        }
+
+        .comparison-table-container {
+            overflow-x: auto;
+            margin: 40px 0;
+            border-radius: 10px;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .comparison-table th {
+            background-color: var(--colore-quattro);
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--colore-tre);
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--colore-tre);
+        }
+
+        .system-name {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--bianco);
+        }
+
+        .feature-cell {
+            text-align: left;
+            font-weight: 500;
+            color: var(--colore-due);
+        }
+
+        .check-mark {
+            color: var(--colore-sette);
+            font-size: 1.5rem;
+        }
+
+        .cross-mark {
+            color: var(--colore-cinque);
+            font-size: 1.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .badge-premium {
+            background-color: var(--colore-cinque);
+            color: white;
+        }
+
+        .badge-standard {
+            background-color: var(--colore-sette);
+            color: white;
+        }
+
+        .badge-basic {
+            background-color: var(--colore-tre);
+            color: white;
+        }
+
+        /* 成本分析圖表 */
+        .chart-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 50px auto;
+            max-width: 1000px;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .chart-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--bianco);
+        }
+
+        .chart {
+            height: 400px;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 30%;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s;
+        }
+
+        .chart-bar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: var(--bianco);
+        }
+
+        .chart-value {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: var(--bianco);
+        }
+
+        /* 功能展示區 */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid var(--colore-tre);
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--bianco);
+        }
+
+        .feature-desc {
+            color: var(--colore-due);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--colore-due);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--colore-sette);
+            font-weight: bold;
+        }
+
+        /* ROI計算器 */
+        .roi-calculator {
+            background: linear-gradient(135deg, rgba(32,33,35,0.95) 0%, rgba(20,21,23,0.95) 100%);
+            border-radius: 15px;
+            padding: 50px;
+            margin: 60px auto;
+            max-width: 1000px;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .calculator-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--colore-due);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--colore-tre);
+            border-radius: 5px;
+            color: var(--bianco);
+            font-size: 1rem;
+        }
+
+        .roi-results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--colore-tre);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--colore-due);
+        }
+
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--colore-sette);
+        }
+
+        /* 成功案例 */
+        .case-studies {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(20,21,23,0.98) 0%, rgba(32,33,35,0.98) 100%);
+            display: none;
+        }
+
+        .case-study-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid var(--colore-tre);
+            position: relative;
+        }
+
+        .case-study-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .case-study-title {
+            font-size: 1.8rem;
+            color: var(--bianco);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .metric {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--colore-sette);
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: var(--colore-due);
+            font-size: 0.9rem;
+        }
+
+        /* CTA區域 */
+        .cta-section {
+            padding: 150px 0;
+            background: linear-gradient(135deg, var(--colore-quattro) 0%, #000 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        .cta-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .cta-subtitle {
+            font-size: 1.5rem;
+            color: var(--colore-due);
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 20px 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 250px;
+            justify-content: center;
+        }
+
+        .cta-primary {
+            background-color: var(--colore-cinque);
+            color: white;
+        }
+
+        .cta-secondary {
+            background-color: transparent;
+            color: var(--bianco);
+            border: 2px solid var(--colore-due);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 頁腳 */
+        footer {
+            background-color: rgba(20, 21, 23, 0.98);
+            padding: 80px 0 40px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            width: 100vw;
+            border-top: 1px solid var(--colore-tre);
+            display: none;
+        }
+
+        .footer-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            color: var(--bianco);
+        }
+
+        .footer-address {
+            margin-bottom: 30px;
+            color: var(--colore-due);
+        }
+
+        .contact-info {
+            margin-bottom: 40px;
+            color: var(--colore-due);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 0;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            background-color: var(--colore-quattro);
+            color: var(--colore-due);
+            transition: all 0.3s;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .social-link:hover {
+            background-color: var(--colore-cinque);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .footer-logo {
+            width: 200px;
+            margin: 30px auto;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            margin-top: 30px;
+            color: var(--colore-due);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 1200px) {
+            .main-title {
+                font-size: 3.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .chart {
+                height: 300px;
+            }
+            
+            .slider {
+                height: 500px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .header-right {
+                display: none;
+            }
+            
+            .hidden-menu-btn {
+                display: block;
+            }
+            
+            .left-auto-menu {
+                display: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-buttons, .cta-buttons {
                 flex-direction: column;
-                gap: 1rem;
+                align-items: center;
             }
-
-            main {
-                margin: 1rem;
-                padding: 1.5rem;
+            
+            .hero-btn, .cta-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .comparison-table-container {
+                margin: 20px -20px;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            
+            .slider {
+                height: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .content-section {
+                padding: 80px 0;
+            }
+            
+            .chart-container, .roi-calculator {
+                padding: 20px;
+                margin: 30px -20px;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hidden-menu {
+                width: 250px;
+            }
+            
+            .cta-title {
+                font-size: 2.5rem;
+            }
+            
+            .cta-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .slider {
+                height: 300px;
+            }
+            
+            .slider-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero-content {
+                padding: 0 15px;
+            }
+            
+            .slider {
+                height: 250px;
             }
         }
     </style>
 </head>
-
-<!-- 主体区域：页面可见内容 -->
 <body>
-    <!-- 页面头部：包含标题和导航 -->
-    <header>
-        <h1>我的HTML5页面</h1>
-        <nav>
+    <!-- 全螢幕影片 -->
+    <div class="fullscreen-video" id="fullscreenVideo">
+        <div class="youtube-container">
+            <!-- YouTube iframe 將由JavaScript動態生成 -->
+        </div>
+        <div class="video-overlay"></div>
+        <button class="skip-video-btn" id="skipVideoBtn">跳過影片</button>
+    </div>
+
+    <!-- 載入動畫 -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <p>系統啟動中...</p>
+    </div>
+
+    <!-- 全屏提示 -->
+    <div class="fullscreen-overlay" id="fullscreen-overlay">
+        <h2>智慧點餐系統演示</h2>
+        <p>請進入全螢幕模式以獲得最佳體驗</p>
+        <button class="fullscreen-button" id="fullscreen-button">
+            <i class="fas fa-expand"></i> 進入全螢幕
+        </button>
+        <p style="margin-top: 20px; font-size: 14px; color: #aaa;">
+            提示：按 F11 鍵或 ESC 鍵也可控制全螢幕
+        </p>
+    </div>
+
+    <!-- 警告彈窗 -->
+    <div class="violation-modal" id="violation-modal">
+        <div class="violation-content">
+            <h2><i class="fas fa-exclamation-circle"></i> 退出全螢幕模式</h2>
+            <p>您已退出全螢幕模式。為確保最佳體驗，系統將自動關閉此頁面。</p>
+            <p style="margin-top: 20px; color: #ff9900;">
+                感謝您觀看演示。
+            </p>
+            <button class="violation-close-button" id="violation-close-button">關閉頁面</button>
+        </div>
+    </div>
+
+    <!-- 視頻背景 -->
+    <div class="video-background">
+        <div class="video-bg-overlay"></div>
+    </div>
+
+    <!-- 視頻控制 -->
+    <div class="video-controls">
+        <button id="mute-toggle" title="靜音/取消靜音">
+            <i class="fas fa-volume-mute"></i>
+        </button>
+        <button id="pause-play" title="暫停/播放">
+            <i class="fas fa-pause"></i>
+        </button>
+    </div>
+
+    <!-- 保護徽章 -->
+    <div class="protection-badge">
+        <i class="fas fa-shield-alt"></i>
+        <span>智慧點餐系統 | 版權所有</span>
+    </div>
+
+    <!-- 左側功能表 - 隱藏式 -->
+    <div class="left-auto-menu" id="leftAutoMenu">
+        <button class="left-menu-toggle" id="leftMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="left-menu-content">
+            <nav class="left-menu-nav">
+                <ul>
+                    <li><a href="#image-slider" class="menu-link"><i class="fas fa-images"></i> <span>圖片輪播</span></a></li>
+                    <li><a href="#comparison" class="menu-link"><i class="fas fa-balance-scale"></i> <span>功能比較</span></a></li>
+                    <li><a href="#cost" class="menu-link"><i class="fas fa-chart-line"></i> <span>成本分析</span></a></li>
+                    <li><a href="#features" class="menu-link"><i class="fas fa-star"></i> <span>獨家功能</span></a></li>
+                    <li><a href="#roi" class="menu-link"><i class="fas fa-calculator"></i> <span>ROI計算</span></a></li>
+                    <li><a href="#cases" class="menu-link"><i class="fas fa-briefcase"></i> <span>成功案例</span></a></li>
+                    <li><a href="#cta" class="menu-link"><i class="fas fa-phone"></i> <span>聯絡我們</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 移動端菜單 -->
+    <div class="hidden-menu-overlay" id="menuOverlay"></div>
+    <div class="hidden-menu" id="hiddenMenu">
+        <button class="hidden-menu-close" id="menuClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <nav class="hidden-menu-nav">
             <ul>
-                <li><a href="#home">首页</a></li>
-                <li><a href="#about">关于我们</a></li>
-                <li><a href="#services">服务内容</a></li>
-                <li><a href="#contact">联系我们</a></li>
+                <li><a href="#image-slider" class="mobile-menu-link">圖片輪播</a></li>
+                <li><a href="#comparison" class="mobile-menu-link">功能比較</a></li>
+                <li><a href="#cost" class="mobile-menu-link">成本分析</a></li>
+                <li><a href="#features" class="mobile-menu-link">獨家功能</a></li>
+                <li><a href="#roi" class="mobile-menu-link">ROI計算</a></li>
+                <li><a href="#cases" class="mobile-menu-link">成功案例</a></li>
+                <li><a href="#cta" class="mobile-menu-link">聯絡我們</a></li>
             </ul>
         </nav>
+    </div>
+
+    <!-- 頭部 -->
+    <header id="mainHeader">
+        <div class="logo">
+            <div class="logo-text">智慧點餐系統</div>
+            <div class="logo-subtext">全功能演示</div>
+        </div>
+        <button class="hidden-menu-btn" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-right">
+            <div class="language-switcher">
+                <span class="active">繁體中文</span> | <span>English</span>
+            </div>
+            <a href="#cta" class="contact-btn">免費諮詢</a>
+        </div>
     </header>
 
-    <!-- 主要内容：核心信息展示 -->
-    <main>
-        <section id="home" class="content-section">
-            <h2>欢迎访问我的页面</h2>
-            <p>这是一个**结构完整、符合HTML5标准**的HTML页面，修复了常见的HTML语法问题（如缺失闭合标签、字符编码未指定、响应式适配缺失等）。</p>
-            <p>页面包含了完整的头部（head）、主体（body）、头部导航（header）、核心内容（main）、区块划分（section）和页脚（footer），满足所有基础网页的结构要求。</p>
-            <img src="https://picsum.photos/800/400" alt="示例图片" class="responsive-img">
-            <a href="#about" class="btn">了解更多</a>
-        </section>
+    <!-- 圖片輪播區 -->
+    <section class="image-slider-section dark-bg" id="image-slider">
+        <div class="container">
+            <h2 class="section-title">系統展示</h2>
+            <div class="slider-container">
+                <div class="slider" id="slider">
+                    <!-- 幻燈片將由JavaScript動態生成 -->
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-btn" id="prevBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="slider-btn" id="nextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="slide-indicators" id="indicators">
+                    <!-- 指示器將由JavaScript動態生成 -->
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <section id="about" class="content-section">
-            <h2>关于我们</h2>
-            <p>我们专注于提供高质量的Web开发服务，精通HTML5、CSS3、JavaScript等前端技术，致力于为客户打造美观、高效、响应式的网页应用。</p>
-            <p>本页面模板已优化了以下问题：</p>
-            <ul>
-                <li>补充了HTML5必备的DOCTYPE声明</li>
-                <li>指定了UTF-8字符编码，避免中文乱码</li>
-                <li>添加了响应式视口元标签，适配移动设备</li>
-                <li>修复了默认浏览器样式的不一致问题</li>
-                <li>补充了完整的页面结构标签（header/main/footer）</li>
-            </ul>
-        </section>
-    </main>
+    <!-- 比較表格 -->
+    <section class="content-section darker-bg" id="comparison">
+        <div class="container">
+            <h2 class="section-title">市場定位與核心價值</h2>
+            <p class="section-text">顛覆傳統的商業模式</p>
+            
+            <div class="comparison-table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">功能/成本項目</th>
+                            <th style="width: 25%; background-color: rgba(203, 51, 79, 0.1);">傳統系統</th>
+                            <th style="width: 25%; background-color: rgba(103, 135, 106, 0.1);">市場中等</th>
+                            <th style="width: 25%; background-color: rgba(66, 133, 244, 0.1);">智慧系統</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="feature-cell">初始授權費用</td>
+                            <td class="highlight">NT$ 80,000 - 200,000</td>
+                            <td>NT$ 40,000 - 100,000</td>
+                            <td><span class="badge badge-premium">市場定價</span></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-cell">月費/年費</td>
+                            <td><i class="fas fa-times cross-mark"></i></td>
+                            <td><i class="fas fa-times cross-mark"></i></td>
+                            <td><i class="fas fa-check check-mark"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-cell">硬體要求</td>
+                            <td>專用設備</td>
+                            <td>特定規格</td>
+                            <td><i class="fas fa-check check-mark"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-cell">五年總成本</td>
+                            <td class="highlight">NT$ 350,000+</td>
+                            <td>NT$ 150,000 - 250,000</td>
+                            <td>一次性投資</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 
-    <!-- 页面页脚：包含版权信息等 -->
+    <!-- 成本分析 -->
+    <section class="content-section darker-bg" id="cost">
+        <div class="container">
+            <h2 class="section-title">成本效益分析</h2>
+            <p class="section-text">量化比較成本節約</p>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">五年總擁有成本(TCO)比較</h3>
+                <div class="chart" id="costChart"></div>
+                
+                <div style="text-align: center; margin-top: 50px;">
+                    <h3 style="color: var(--colore-sette); font-size: 1.8rem;">投資報酬率差異顯著</h3>
+                    <p>隨著使用時間延長，成本優勢擴大</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 獨家功能 -->
+    <section class="content-section dark-bg" id="features">
+        <div class="container">
+            <h2 class="section-title">獨家創新功能</h2>
+            <p class="section-text">超越傳統系統的完整解決方案</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI智能推薦</h3>
+                    <p class="feature-desc">基於機器學習的智能推薦</p>
+                    <ul class="feature-list">
+                        <li>顧客行為分析</li>
+                        <li>動態套餐組合</li>
+                        <li>銷售趨勢預測</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="feature-title">預測性管理</h3>
+                    <p class="feature-desc">基於數據預測需求</p>
+                    <ul class="feature-list">
+                        <li>智能採購建議</li>
+                        <li>庫存週轉優化</li>
+                        <li>供應商管理</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI計算器 -->
+    <section class="content-section darker-bg" id="roi">
+        <div class="container">
+            <h2 class="section-title">投資回報率計算器</h2>
+            <p class="section-text">根據您的規模計算投資回報</p>
+            
+            <div class="roi-calculator">
+                <div class="calculator-inputs">
+                    <div class="input-group">
+                        <label for="monthlyRevenue">月營業額 (NT$)</label>
+                        <input type="number" id="monthlyRevenue" value="800000" min="100000" step="10000">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="employeeCount">員工人數</label>
+                        <input type="number" id="employeeCount" value="8" min="1" step="1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="currentWaste">食材浪費率 (%)</label>
+                        <input type="number" id="currentWaste" value="12" min="1" max="30" step="1">
+                    </div>
+                </div>
+                
+                <div class="roi-results" id="roiResults"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 成功案例 -->
+    <section class="case-studies content-section dark-bg" id="cases">
+        <div class="container">
+            <h2 class="section-title">成功案例</h2>
+            <p class="section-text">實際導入案例效益追蹤</p>
+            
+            <div class="case-study-card">
+                <div class="case-study-header">
+                    <h3 class="case-study-title">連鎖餐廳案例</h3>
+                    <span class="badge badge-premium">導入12個月</span>
+                </div>
+                
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <div class="metric-value">NT$ 1,250,000</div>
+                        <div class="metric-label">年成本節約</div>
+                    </div>
+                    
+                    <div class="metric">
+                        <div class="metric-value">33%</div>
+                        <div class="metric-label">效率提升</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA區域 -->
+    <section class="cta-section" id="cta">
+        <div class="container">
+            <h2 class="cta-title">現在是投資的最佳時機</h2>
+            <p class="cta-subtitle">
+                數位轉型的速度決定生存機率。
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="#" class="cta-btn cta-primary" id="consultBtn">
+                    <i class="fas fa-calendar-check"></i> 預約演示
+                </a>
+                <a href="#" class="cta-btn cta-secondary" id="calcBtn">
+                    <i class="fas fa-calculator"></i> 成本分析
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 頁腳 -->
     <footer>
-        <p>&copy; 2026 我的HTML页面 版权所有</p>
-        <p>联系方式：contact@example.com</p>
+        <h2 class="footer-title">智慧點餐系統</h2>
+        <p class="footer-address">重塑餐飲業數位轉型標準</p>
+        
+        <div class="contact-info">
+            <p><i class="fas fa-envelope"></i> contact@system.com</p>
+            <p><i class="fas fa-phone"></i> (02) 1234-5678</p>
+        </div>
+        
+        <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-line"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2024 智慧點餐系統. 保留所有權利.
+        </div>
     </footer>
+
+    <script>
+        // DOM元素
+        const dom = {
+            fullscreenVideo: document.getElementById('fullscreenVideo'),
+            youtubeContainer: document.querySelector('.youtube-container'),
+            skipVideoBtn: document.getElementById('skipVideoBtn'),
+            loadingOverlay: document.getElementById('loading-overlay'),
+            fullscreenOverlay: document.getElementById('fullscreen-overlay'),
+            fullscreenButton: document.getElementById('fullscreen-button'),
+            violationModal: document.getElementById('violation-modal'),
+            violationCloseButton: document.getElementById('violation-close-button'),
+            videoBackground: document.querySelector('.video-background'),
+            muteToggle: document.getElementById('mute-toggle'),
+            pausePlay: document.getElementById('pause-play'),
+            menuToggle: document.getElementById('menuToggle'),
+            menuClose: document.getElementById('menuClose'),
+            menuOverlay: document.getElementById('menuOverlay'),
+            hiddenMenu: document.getElementById('hiddenMenu'),
+            leftAutoMenu: document.getElementById('leftAutoMenu'),
+            leftMenuToggle: document.getElementById('leftMenuToggle'),
+            mainHeader: document.getElementById('mainHeader'),
+            slider: document.getElementById('slider'),
+            prevBtn: document.getElementById('prevBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            indicators: document.getElementById('indicators'),
+            costChart: document.getElementById('costChart'),
+            roiResults: document.getElementById('roiResults'),
+            consultBtn: document.getElementById('consultBtn'),
+            calcBtn: document.getElementById('calcBtn')
+        };
+
+        // YouTube影片設定
+        const YOUTUBE_URL = "https://www.youtube.com/embed/DWqyDaamiuo";
+        const YOUTUBE_PARAMS = "?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1";
+
+        // 幻燈片相關變數
+        let currentSlide = 0;
+        const totalSlides = 18; // 0.png 到 17.png
+        const images = [];
+
+        // 載入圖片
+        function loadImages() {
+            for (let i = 0; i < totalSlides; i++) {
+                images.push(`image/${i}.png`);
+            }
+        }
+
+        // 創建YouTube影片
+        function createYouTubeVideo() {
+            const iframe = document.createElement('iframe');
+            iframe.src = YOUTUBE_URL + YOUTUBE_PARAMS;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            iframe.style.pointerEvents = 'none'; // 防止點擊互動
+            iframe.title = "智慧點餐系統介紹影片";
+            
+            dom.youtubeContainer.appendChild(iframe);
+            
+            // 背景也使用YouTube影片
+            const bgIframe = document.createElement('iframe');
+            bgIframe.src = YOUTUBE_URL + YOUTUBE_PARAMS + "&loop=1&playlist=DWqyDaamiuo";
+            bgIframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            bgIframe.allowFullscreen = true;
+            bgIframe.style.pointerEvents = 'none';
+            bgIframe.title = "背景影片";
+            
+            dom.videoBackground.appendChild(bgIframe);
+        }
+
+        // 創建幻燈片
+        function createSlides() {
+            dom.slider.innerHTML = '';
+            dom.indicators.innerHTML = '';
+            
+            images.forEach((src, index) => {
+                // 創建幻燈片
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                slide.dataset.index = index;
+                
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = `系統畫面 ${index + 1}`;
+                img.loading = 'lazy';
+                
+                slide.appendChild(img);
+                dom.slider.appendChild(slide);
+                
+                // 創建指示器
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator';
+                indicator.dataset.index = index;
+                indicator.addEventListener('click', () => goToSlide(index));
+                dom.indicators.appendChild(indicator);
+            });
+            
+            updateSlider();
+        }
+
+        // 更新幻燈片位置
+        function updateSlider() {
+            dom.slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            // 更新指示器
+            document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        }
+
+        // 切換到指定幻燈片
+        function goToSlide(index) {
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+            currentSlide = index;
+            updateSlider();
+        }
+
+        // 下一張
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        // 上一張
+        function prevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        // 自動輪播
+        let slideInterval;
+        function startAutoSlide() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(slideInterval);
+        }
+
+        // 全螢幕控制
+        let isFullscreen = false;
+
+        function enterFullscreen() {
+            if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+                isFullscreen = true;
+                dom.fullscreenOverlay.style.display = 'none';
+            }
+        }
+
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            isFullscreen = false;
+        }
+
+        function handleFullscreenChange() {
+            if (!document.fullscreenElement && 
+                !document.mozFullScreenElement && 
+                !document.webkitFullscreenElement && 
+                !document.msFullscreenElement) {
+                
+                isFullscreen = false;
+                setTimeout(() => {
+                    dom.violationModal.style.display = 'flex';
+                }, 500);
+            }
+        }
+
+        // 跳過影片
+        function skipIntroVideo() {
+            dom.fullscreenVideo.style.opacity = '0';
+            setTimeout(() => {
+                dom.fullscreenVideo.style.display = 'none';
+                showMainContent();
+                enterFullscreen();
+                startAutoSlide(); // 開始自動輪播
+            }, 300);
+        }
+
+        // 顯示主要內容
+        function showMainContent() {
+            const mainElements = [
+                dom.mainHeader,
+                document.querySelector('.image-slider-section'),
+                document.querySelectorAll('.content-section'),
+                document.querySelector('.comparison-section'),
+                document.querySelector('.case-studies'),
+                document.querySelector('.cta-section'),
+                document.querySelector('footer')
+            ];
+            
+            mainElements.forEach(element => {
+                if (element) {
+                    if (element.length) {
+                        element.forEach(el => el.style.display = 'block');
+                    } else {
+                        element.style.display = element === dom.mainHeader ? 'flex' : 'block';
+                    }
+                }
+            });
+        }
+
+        // 影片結束處理（YouTube沒有可靠的結束事件，改用定時器）
+        function handleYouTubeVideoEnd() {
+            // 設定一個較長的時間（影片長度 + 緩衝），然後自動跳過
+            setTimeout(skipIntroVideo, 60000); // 假設影片1分鐘
+        }
+
+        // 成本圖表
+        function createCostChart() {
+            const chartData = [
+                { label: '傳統系統', value: 410000, color: 'var(--colore-cinque)' },
+                { label: '市場中等', value: 270000, color: 'var(--colore-tre)' },
+                { label: '本系統', value: 80000, color: 'var(--colore-sette)' }
+            ];
+            
+            const maxValue = Math.max(...chartData.map(d => d.value));
+            
+            dom.costChart.innerHTML = '';
+            
+            chartData.forEach((data, index) => {
+                const barHeight = (data.value / maxValue) * 300;
+                const leftPosition = 10 + (index * 33) + '%';
+                
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${barHeight}px`;
+                bar.style.left = leftPosition;
+                bar.style.backgroundColor = data.color;
+                bar.style.width = '25%';
+                
+                const valueLabel = document.createElement('div');
+                valueLabel.className = 'chart-value';
+                valueLabel.textContent = `NT$ ${data.value.toLocaleString()}`;
+                bar.appendChild(valueLabel);
+                
+                const textLabel = document.createElement('div');
+                textLabel.className = 'chart-label';
+                textLabel.textContent = data.label;
+                bar.appendChild(textLabel);
+                
+                dom.costChart.appendChild(bar);
+            });
+        }
+
+        // ROI計算器
+        function calculateROI() {
+            const monthlyRevenue = parseInt(dom.monthlyRevenue.value) || 800000;
+            const employeeCount = parseInt(dom.employeeCount.value) || 8;
+            const currentWaste = parseInt(dom.currentWaste.value) || 12;
+            
+            const annualRevenue = monthlyRevenue * 12;
+            const laborSavings = employeeCount * 35000 * 12 * 0.15;
+            const wasteReduction = annualRevenue * (currentWaste/100) * 0.2;
+            const revenueGrowth = annualRevenue * 0.08;
+            
+            const annualBenefits = laborSavings + wasteReduction + revenueGrowth;
+            const systemCost = 80000;
+            const roi = ((annualBenefits - systemCost) / systemCost * 100).toFixed(0);
+            
+            const resultsHTML = `
+                <div class="result-item">
+                    <span class="result-label">年效益總值</span>
+                    <span class="result-value">NT$ ${Math.round(annualBenefits).toLocaleString()}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">系統投資成本</span>
+                    <span class="result-value">NT$ ${systemCost.toLocaleString()}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">投資回收期</span>
+                    <span class="result-value">< 1個月</span>
+                </div>
+                <div class="result-item" style="border-top: 2px solid var(--colore-sette); padding-top: 20px;">
+                    <span class="result-label">投資報酬率(ROI)</span>
+                    <span class="result-value" style="font-size: 2rem; color: var(--accent);">${roi}%</span>
+                </div>
+            `;
+            
+            dom.roiResults.innerHTML = resultsHTML;
+        }
+
+        // 移動端菜單控制
+        function toggleMobileMenu() {
+            dom.hiddenMenu.style.right = '0';
+            dom.menuOverlay.style.opacity = '1';
+            dom.menuOverlay.style.visibility = 'visible';
+        }
+
+        function closeMobileMenu() {
+            dom.hiddenMenu.style.right = '-300px';
+            dom.menuOverlay.style.opacity = '0';
+            dom.menuOverlay.style.visibility = 'hidden';
+        }
+
+        // 初始化函數
+        function initFunctions() {
+            // 載入圖片並創建輪播
+            loadImages();
+            createSlides();
+            
+            // 創建YouTube影片
+            createYouTubeVideo();
+            
+            // 設定影片事件
+            dom.skipVideoBtn.addEventListener('click', skipIntroVideo);
+            
+            // 設定輪播控制
+            dom.prevBtn.addEventListener('click', () => {
+                prevSlide();
+                stopAutoSlide();
+                setTimeout(startAutoSlide, 10000);
+            });
+            
+            dom.nextBtn.addEventListener('click', () => {
+                nextSlide();
+                stopAutoSlide();
+                setTimeout(startAutoSlide, 10000);
+            });
+            
+            // 滑鼠懸停停止輪播
+            dom.slider.addEventListener('mouseenter', stopAutoSlide);
+            dom.slider.addEventListener('mouseleave', startAutoSlide);
+            
+            // 全螢幕事件
+            dom.fullscreenButton.addEventListener('click', enterFullscreen);
+            dom.violationCloseButton.addEventListener('click', () => {
+                window.close();
+            });
+
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+            // 鍵盤快捷鍵
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F11') {
+                    e.preventDefault();
+                    if (!isFullscreen) {
+                        enterFullscreen();
+                    } else {
+                        exitFullscreen();
+                    }
+                }
+                
+                if (e.key === 'Escape' && isFullscreen) {
+                    exitFullscreen();
+                }
+                
+                // 空格鍵跳過影片
+                if (e.key === ' ' && dom.fullscreenVideo.style.display !== 'none') {
+                    e.preventDefault();
+                    skipIntroVideo();
+                }
+                
+                // 左右鍵控制輪播
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    prevSlide();
+                }
+                
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    nextSlide();
+                }
+            });
+
+            // 影片結束處理
+            handleYouTubeVideoEnd();
+            
+            // 移動端菜單
+            dom.menuToggle.addEventListener('click', toggleMobileMenu);
+            dom.menuClose.addEventListener('click', closeMobileMenu);
+            dom.menuOverlay.addEventListener('click', closeMobileMenu);
+
+            // 左側菜單
+            dom.leftMenuToggle.addEventListener('click', () => {
+                const menuContent = dom.leftAutoMenu.querySelector('.left-menu-content');
+                const isExpanded = menuContent.style.width === '200px';
+                menuContent.style.width = isExpanded ? '170px' : '200px';
+                
+                const spans = menuContent.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.display = isExpanded ? 'none' : 'inline';
+                });
+            });
+
+            // ROI計算器
+            const roiInputs = ['monthlyRevenue', 'employeeCount', 'currentWaste'];
+            roiInputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateROI);
+            });
+
+            // 按鈕事件
+            dom.consultBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('感謝您的興趣！將安排演示。');
+            });
+
+            dom.calcBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector('#roi').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // 初始化計算
+            createCostChart();
+            calculateROI();
+
+            // 滾動時隱藏左側菜單
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                dom.leftAutoMenu.style.opacity = '0.3';
+                
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    dom.leftAutoMenu.style.opacity = '1';
+                }, 500);
+            });
+
+            // 平滑滾動
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // 關閉移動端菜單
+                        closeMobileMenu();
+                    }
+                });
+            });
+            
+            // 自動全螢幕播放
+            setTimeout(() => {
+                enterFullscreen();
+            }, 1000);
+        }
+
+        // 頁面初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 快速載入
+            setTimeout(() => {
+                dom.loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    dom.loadingOverlay.style.display = 'none';
+                    initFunctions();
+                }, 300);
+            }, 1500);
+        });
+
+        // 防止右鍵選單和複製
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+        document.addEventListener('paste', (e) => e.preventDefault());
+
+        // 防止開發者工具
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                dom.violationModal.style.display = 'flex';
+            }
+        });
+
+        // 防止點擊YouTube連結
+        document.addEventListener('click', (e) => {
+            // 防止任何外部連結
+            if (e.target.closest('a') && e.target.closest('a').href.includes('youtube.com')) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+    </script>
 </body>
 </html>
