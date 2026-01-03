@@ -85,7 +85,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.3s ease-in-out;
         }
 
         .youtube-container {
@@ -180,7 +179,6 @@
             width: 100vw;
             height: 100vh;
             background: rgba(10, 10, 42, 0.85);
-            z-index: 1;
         }
 
         /* 載入指示器 */
@@ -274,7 +272,6 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
             max-width: 80%;
             border: 2px solid #ff6600;
-            text-align: center;
         }
 
         .violation-close-button {
@@ -284,12 +281,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s;
-        }
-
-        .violation-close-button:hover {
-            background: #ff4400;
         }
 
         /* 視頻控制 */
@@ -313,11 +304,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .video-controls button:hover {
-            background: rgba(0, 0, 0, 0.8);
         }
 
         /* 保護徽章 */
@@ -366,11 +352,6 @@
             position: absolute;
             right: -50px;
             top: 0;
-            transition: background 0.3s;
-        }
-
-        .left-menu-toggle:hover {
-            background-color: var(--colore-cinque);
         }
 
         .left-menu-content {
@@ -415,9 +396,9 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            padding: 8px 5px;
-            border-radius: 4px;
+            padding: 10px 15px;
             transition: all 0.3s;
+            border-radius: 4px;
         }
 
         .left-menu-nav a:hover {
@@ -451,7 +432,6 @@
             align-items: center;
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--colore-tre);
-            box-sizing: border-box;
         }
 
         .logo {
@@ -494,7 +474,6 @@
         .language-switcher span.active {
             background-color: var(--colore-quattro);
             color: var(--bianco);
-            border: 1px solid var(--colore-tre);
         }
 
         .contact-btn {
@@ -549,7 +528,6 @@
             transition: right 0.3s ease;
             border-left: 1px solid var(--colore-tre);
             overflow-y: auto;
-            box-sizing: border-box;
         }
 
         .hidden-menu-close {
@@ -561,11 +539,6 @@
             background: none;
             border: none;
             cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .hidden-menu-close:hover {
-            color: var(--accent);
         }
 
         .hidden-menu-nav ul {
@@ -598,7 +571,6 @@
             z-index: 10;
             width: 100vw;
             display: none;
-            margin-top: 80px;
         }
 
         .slider-container {
@@ -693,7 +665,6 @@
             z-index: 10;
             width: 100vw;
             display: none;
-            box-sizing: border-box;
         }
 
         .dark-bg {
@@ -737,7 +708,6 @@
             margin: 0 auto 40px;
             font-size: 1.2rem;
             line-height: 1.8;
-            text-align: center;
         }
 
         .highlight {
@@ -750,8 +720,6 @@
             padding: 100px 0;
             background: linear-gradient(135deg, rgba(32,33,35,0.98) 0%, rgba(20,21,23,0.98) 100%);
             display: none;
-            width: 100vw;
-            box-sizing: border-box;
         }
 
         .comparison-table-container {
@@ -773,7 +741,6 @@
             text-align: center;
             font-size: 1.2rem;
             border-bottom: 2px solid var(--colore-tre);
-            color: var(--bianco);
         }
 
         .comparison-table td {
@@ -791,17 +758,16 @@
         .feature-cell {
             text-align: left;
             font-weight: 500;
+            color: var(--colore-due);
+        }
+
+        .check-mark {
             color: var(--colore-sette);
             font-size: 1.5rem;
         }
 
         .cross-mark {
             color: var(--colore-cinque);
-            font-size: 1.5rem;
-        }
-
-        .check-mark {
-            color: var(--colore-sette);
             font-size: 1.5rem;
         }
 
@@ -982,12 +948,6 @@
             border-radius: 5px;
             color: var(--bianco);
             font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            border-color: var(--accent);
         }
 
         .roi-results {
@@ -1024,8 +984,6 @@
             padding: 100px 0;
             background: linear-gradient(135deg, rgba(20,21,23,0.98) 0%, rgba(32,33,35,0.98) 100%);
             display: none;
-            width: 100vw;
-            box-sizing: border-box;
         }
 
         .case-study-card {
@@ -1084,15 +1042,12 @@
             position: relative;
             overflow: hidden;
             display: none;
-            width: 100vw;
-            box-sizing: border-box;
         }
 
         .cta-title {
             font-size: 3.5rem;
             margin-bottom: 20px;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-            color: var(--bianco);
         }
 
         .cta-subtitle {
@@ -1144,14 +1099,13 @@
         /* 頁腳 */
         footer {
             background-color: rgba(20, 21, 23, 0.98);
-            padding: 60px 40px;
+            padding: 80px 0 40px;
             text-align: center;
             position: relative;
             z-index: 10;
             width: 100vw;
             border-top: 1px solid var(--colore-tre);
             display: none;
-            box-sizing: border-box;
         }
 
         .footer-title {
@@ -1257,7 +1211,7 @@
             }
             
             .comparison-table-container {
-                margin: 20px 0;
+                margin: 20px -20px;
                 border-radius: 0;
                 border-left: none;
                 border-right: none;
@@ -1357,7 +1311,7 @@
 
     <!-- 全屏提示 -->
     <div class="fullscreen-overlay" id="fullscreen-overlay">
-        <h2>智慧點餐系統</h2>
+        <h2>智慧點餐系統演示</h2>
         <p>請進入全螢幕模式以獲得最佳體驗</p>
         <button class="fullscreen-button" id="fullscreen-button">
             <i class="fas fa-expand"></i> 進入全螢幕
@@ -1512,13 +1466,13 @@
                             <td class="feature-cell">硬體要求</td>
                             <td>專用設備</td>
                             <td>特定規格</td>
-                            <td><i class="fas fa-check check-mark"></i> 通用設備</td>
+                            <td><i class="fas fa-check check-mark"></i></td>
                         </tr>
                         <tr>
                             <td class="feature-cell">五年總成本</td>
                             <td class="highlight">NT$ 350,000+</td>
                             <td>NT$ 150,000 - 250,000</td>
-                            <td>一次性投資 (NT$ 80,000)</td>
+                            <td>一次性投資</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1527,7 +1481,7 @@
     </section>
 
     <!-- 成本分析 -->
-    <section class="content-section dark-bg" id="cost">
+    <section class="content-section darker-bg" id="cost">
         <div class="container">
             <h2 class="section-title">成本效益分析</h2>
             <p class="section-text">量化比較成本節約</p>
@@ -1610,7 +1564,7 @@
     </section>
 
     <!-- 成功案例 -->
-    <section class="case-studies" id="cases">
+    <section class="case-studies content-section dark-bg" id="cases">
         <div class="container">
             <h2 class="section-title">成功案例</h2>
             <p class="section-text">實際導入案例效益追蹤</p>
@@ -1704,10 +1658,7 @@
             costChart: document.getElementById('costChart'),
             roiResults: document.getElementById('roiResults'),
             consultBtn: document.getElementById('consultBtn'),
-            calcBtn: document.getElementById('calcBtn'),
-            monthlyRevenue: document.getElementById('monthlyRevenue'),
-            employeeCount: document.getElementById('employeeCount'),
-            currentWaste: document.getElementById('currentWaste')
+            calcBtn: document.getElementById('calcBtn')
         };
 
         // YouTube影片設定
@@ -1722,8 +1673,7 @@
         // 載入圖片
         function loadImages() {
             for (let i = 0; i < totalSlides; i++) {
-                // 替換為占位圖片（實際專案中替換為真實圖片路徑）
-                images.push(`https://picsum.photos/1200/600?random=${i}`);
+                images.push(`image/${i}.png`);
             }
         }
 
@@ -1826,15 +1776,14 @@
 
         function enterFullscreen() {
             if (!document.fullscreenElement) {
-                const docEl = document.documentElement;
-                if (docEl.requestFullscreen) {
-                    docEl.requestFullscreen();
-                } else if (docEl.mozRequestFullScreen) {
-                    docEl.mozRequestFullScreen();
-                } else if (docEl.webkitRequestFullscreen) {
-                    docEl.webkitRequestFullscreen();
-                } else if (docEl.msRequestFullscreen) {
-                    docEl.msRequestFullscreen();
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
                 }
                 isFullscreen = true;
                 dom.fullscreenOverlay.style.display = 'none';
@@ -1855,14 +1804,12 @@
         }
 
         function handleFullscreenChange() {
-            const isCurrentlyFullscreen = !!document.fullscreenElement || 
-                                         !!document.mozFullScreenElement || 
-                                         !!document.webkitFullscreenElement || 
-                                         !!document.msFullscreenElement;
-            
-            isFullscreen = isCurrentlyFullscreen;
-            
-            if (!isCurrentlyFullscreen) {
+            if (!document.fullscreenElement && 
+                !document.mozFullScreenElement && 
+                !document.webkitFullscreenElement && 
+                !document.msFullscreenElement) {
+                
+                isFullscreen = false;
                 setTimeout(() => {
                     dom.violationModal.style.display = 'flex';
                 }, 500);
@@ -1882,28 +1829,31 @@
 
         // 顯示主要內容
         function showMainContent() {
-            // 要顯示的元素列表
-            const elementsToShow = [
+            const mainElements = [
                 dom.mainHeader,
                 document.querySelector('.image-slider-section'),
-                document.querySelector('#comparison'),
-                document.querySelector('#cost'),
-                document.querySelector('#features'),
-                document.querySelector('#roi'),
-                document.querySelector('#cases'),
-                document.querySelector('#cta'),
+                document.querySelectorAll('.content-section'),
+                document.querySelector('.comparison-section'),
+                document.querySelector('.case-studies'),
+                document.querySelector('.cta-section'),
                 document.querySelector('footer')
             ];
             
-            elementsToShow.forEach(element => {
+            mainElements.forEach(element => {
                 if (element) {
-                    if (element === dom.mainHeader) {
-                        element.style.display = 'flex';
+                    if (element.length) {
+                        element.forEach(el => el.style.display = 'block');
                     } else {
-                        element.style.display = 'block';
+                        element.style.display = element === dom.mainHeader ? 'flex' : 'block';
                     }
                 }
             });
+        }
+
+        // 影片結束處理（YouTube沒有可靠的結束事件，改用定時器）
+        function handleYouTubeVideoEnd() {
+            // 設定一個較長的時間（影片長度 + 緩衝），然後自動跳過
+            setTimeout(skipIntroVideo, 60000); // 假設影片1分鐘
         }
 
         // 成本圖表
@@ -2028,7 +1978,6 @@
                 window.close();
             });
 
-            // 監聽全螢幕變化事件
             document.addEventListener('fullscreenchange', handleFullscreenChange);
             document.addEventListener('mozfullscreenchange', handleFullscreenChange);
             document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
@@ -2067,6 +2016,9 @@
                 }
             });
 
+            // 影片結束處理
+            handleYouTubeVideoEnd();
+            
             // 移動端菜單
             dom.menuToggle.addEventListener('click', toggleMobileMenu);
             dom.menuClose.addEventListener('click', closeMobileMenu);
@@ -2085,15 +2037,15 @@
             });
 
             // ROI計算器
-            const roiInputs = [dom.monthlyRevenue, dom.employeeCount, dom.currentWaste];
-            roiInputs.forEach(input => {
-                input.addEventListener('input', calculateROI);
+            const roiInputs = ['monthlyRevenue', 'employeeCount', 'currentWaste'];
+            roiInputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateROI);
             });
 
             // 按鈕事件
             dom.consultBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                alert('感謝您的興趣！我們將盡快與您聯繫安排演示。');
+                alert('感謝您的興趣！將安排演示。');
             });
 
             dom.calcBtn.addEventListener('click', (e) => {
@@ -2135,6 +2087,11 @@
                     }
                 });
             });
+            
+            // 自動全螢幕播放
+            setTimeout(() => {
+                enterFullscreen();
+            }, 1000);
         }
 
         // 頁面初始化
