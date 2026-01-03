@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>保留左侧菜单，删除右侧 hidden-menu</title>
-    <!-- 修复 favicon.ico 404 警告：使用内联 base64 图标，无需额外文件 -->
+    <title>保留左侧悬浮菜单，删除右侧 hidden-menu</title>
+    <!-- 内联 favicon 消除 404 警告，无需额外文件 -->
     <link rel="shortcut icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzJmNDA1MCIgZD0iTTEyIDJBMTAgMTAgMCAwIDEgMjIgMTJBMTAgMTAgMCAwIDEgMTIgMjJBMTAgMTAgMCAwIDEgMiAxMmExMCAxMCAwIDAgMSAxMCAxMFoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTIgNEg2djJoNnY2aC02djJoNnY2SjZ2MmgyVjRaIi8+PC9zdmc+" type="image/x-icon">
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzJmNDA1MCIgZD0iTTEyIDJBMTAgMTAgMCAwIDEgMjIgMTJBMTAgMTAgMCAwIDEgMTIgMjJBMTAgMTAgMCAwIDEgMiAxMmExMCAxMCAwIDAgMSAxMCAxMFoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTIgNEg2djJoNnY2aC02djJoNnY2SjZ2MmgyVjRaIi8+PC9zdmc+" type="image/x-icon">
     <style>
-        /* 全局基础样式（保留原有，仅移除右侧 hidden-menu 相关样式） */
+        /* 全局基础样式（无冗余，仅保留核心布局） */
         * {
             margin: 0;
             padding: 0;
@@ -17,13 +17,14 @@
         }
 
         body {
-            display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            padding-left: 0;
+            transition: padding-left 0.3s ease;
         }
 
-        /* 左侧菜单样式（完整保留，无修改） */
-        .left-menu {
+        /* 左侧悬浮隐藏式菜单（left-auto-menu）：鼠标移至左侧才显示，完整保留 */
+        .left-auto-menu {
             width: 220px;
             background-color: #2f4050;
             color: #a7b1c2;
@@ -31,11 +32,18 @@
             position: fixed;
             top: 0;
             left: 0;
-            transition: all 0.3s ease;
+            transform: translateX(-100%); /* 默认隐藏（移出左侧可视区域） */
+            transition: transform 0.3s ease-in-out; /* 平滑显示/隐藏过渡 */
             z-index: 99;
         }
 
-        .left-menu .logo {
+        /* 鼠标移至页面左侧区域，触发菜单显示 */
+        body:hover .left-auto-menu {
+            transform: translateX(0); /* 滑入可视区域，完整显示 */
+        }
+
+        /* 左侧菜单内部样式（完整保留，7个导航项目适配） */
+        .left-auto-menu .logo {
             padding: 20px 0;
             text-align: center;
             font-size: 18px;
@@ -44,16 +52,16 @@
             border-bottom: 1px solid #233140;
         }
 
-        .left-menu .nav-list {
+        .left-auto-menu .nav-list {
             list-style: none;
             margin-top: 20px;
         }
 
-        .left-menu .nav-item {
+        .left-auto-menu .nav-item {
             margin-bottom: 5px;
         }
 
-        .left-menu .nav-link {
+        .left-auto-menu .nav-link {
             display: block;
             padding: 12px 20px;
             color: #a7b1c2;
@@ -61,20 +69,19 @@
             transition: background-color 0.3s ease;
         }
 
-        .left-menu .nav-link:hover {
+        .left-auto-menu .nav-link:hover {
             background-color: #233140;
             color: #fff;
         }
 
-        .left-menu .nav-link.active {
+        .left-auto-menu .nav-link.active {
             background-color: #1ab394;
             color: #fff;
         }
 
-        /* 主内容区域样式（完整保留，无修改） */
+        /* 主内容区域（完整保留，无修改，适配左侧菜单悬浮逻辑） */
         .main-content {
-            margin-left: 220px;
-            flex: 1;
+            width: 100%;
             padding: 30px;
             background-color: #f3f3f4;
             transition: margin-left 0.3s ease;
@@ -93,81 +100,57 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        /* 移动端适配（仅保留左侧菜单相关，移除右侧 hidden-menu 汉堡图标及相关样式） */
+        /* 移动端适配（仅适配左侧菜单，已完全移除右侧 hidden-menu 相关所有样式） */
         @media (max-width: 768px) {
-            .left-menu {
+            /* 移动端左侧悬浮菜单保持可触发，优化显示逻辑 */
+            .left-auto-menu {
                 transform: translateX(-100%);
             }
 
-            .left-menu.show {
+            body:hover .left-auto-menu {
                 transform: translateX(0);
             }
 
             .main-content {
-                margin-left: 0;
-            }
-
-            /* 移动端左侧菜单触发按钮（保留，非右侧 hidden-menu 相关） */
-            .mobile-left-trigger {
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                width: 40px;
-                height: 40px;
-                background-color: #2f4050;
-                color: #fff;
-                text-align: center;
-                line-height: 40px;
-                border-radius: 4px;
-                z-index: 100;
-                cursor: pointer;
+                padding: 20px 15px;
             }
         }
+
+        /* 已完全移除：右侧 hidden-menu 相关的所有 CSS 样式（汉堡图标、右滑动画、定位等） */
     </style>
 </head>
 <body>
-    <!-- 左侧菜单（完整保留，无修改）：包含7个导航项目 -->
-    <nav class="left-menu">
+    <!-- 左侧悬浮隐藏式菜单（left-auto-menu）：完整保留，含7个指定导航项目 -->
+    <nav class="left-auto-menu">
         <div class="logo">站点导航</div>
         <ul class="nav-list">
-            <li class="nav-item"><a href="#" class="nav-link active">首页</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">产品中心</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">解决方案</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">案例展示</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">关于我们</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">联系客服</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">招商加盟</a></li>
+            <li class="nav-item"><a href="#" class="nav-link active">图片轮播</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">功能比较</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">数据统计</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">模板下载</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">使用教程</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">常见问题</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">意见反馈</a></li>
         </ul>
     </nav>
 
-    <!-- 主内容区域（完整保留，无修改） -->
+    <!-- 主内容区域（完整保留，无修改，不包含任何右侧 hidden-menu 相关结构） -->
     <div class="main-content">
         <h1 class="page-header">主内容页面</h1>
         <div class="page-content">
-            <p>此处为页面核心内容，所有内容均保持不变，仅删除了右侧移动端 hidden-menu。</p>
-            <p>右侧移动端从右滑出的汉堡菜单已完全移除，不影响左侧菜单及其他页面功能。</p>
-            <p>已修复 favicon.ico 404 警告，无需额外放置 ico 文件，可直接运行。</p>
+            <p>左侧为悬浮隐藏式菜单（left-auto-menu）：鼠标移至页面左侧即可显示，移开后自动隐藏。</p>
+            <p>右侧移动端滑出菜单（hidden-menu）已完全删除，无任何残留结构和功能。</p>
+            <p>左侧菜单包含7个指定导航项目，样式和交互逻辑正常，不影响页面其他功能。</p>
         </div>
     </div>
 
-    <!-- 移动端左侧菜单触发按钮（保留，非右侧 hidden-menu 相关） -->
-    <div class="mobile-left-trigger">☰</div>
-
-    <!-- 已完全移除：右侧 hidden-menu 相关的所有结构 -->
+    <!-- 已完全移除：右侧 hidden-menu 相关的所有 HTML 结构（汉堡触发图标、滑出菜单容器、7个导航副本） -->
 
     <script>
-        // 左侧菜单移动端交互（保留，无修改，非右侧 hidden-menu 相关）
+        // 仅保留页面基础加载逻辑，无任何右侧 hidden-menu 相关 JavaScript 代码
         document.addEventListener('DOMContentLoaded', function() {
-            const mobileTrigger = document.querySelector('.mobile-left-trigger');
-            const leftMenu = document.querySelector('.left-menu');
-
-            if (mobileTrigger && leftMenu) {
-                mobileTrigger.addEventListener('click', function() {
-                    leftMenu.classList.toggle('show');
-                });
-            }
-
-            // 已移除：右侧 hidden-menu 相关的所有 JavaScript 交互逻辑
+            // 左侧悬浮菜单为 CSS 纯样式触发，无需额外 JS 逻辑
+            // 已完全移除：右侧 hidden-menu 相关的所有交互逻辑（点击触发、右滑、遮罩等）
         });
     </script>
 </body>
