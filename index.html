@@ -1,0 +1,2488 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智慧點餐系統 | 整合演示平台</title>
+    
+    <!-- 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;500;600;700;900&family=Roboto:wght@300;400;500;700&family=Segoe+UI:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS變數定義 */
+        :root {
+            --primary-dark: #0f172a;
+            --primary-blue: #1e40af;
+            --accent-gold: #d4af37;
+            --accent-cyan: #22d3ee;
+            --accent-red: #cb334f;
+            --accent-green: #67876a;
+            --light-bg: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --colore-quattro: #202123;
+            --colore-due: #bcb5b1;
+            --colore-tre: #77726c;
+            --bianco: #fff;
+            --transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 基礎樣式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            background: var(--primary-dark);
+            color: var(--colore-due);
+            transition: background-color 0.3s;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 600;
+            color: var(--bianco);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* 新增：圖片加載失敗默認樣式（解決無圖片時的空白問題） */
+        img[onerror] {
+            background-color: rgba(32, 33, 35, 0.8);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23bcb5b1'%3E%3Cpath d='M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z'/%3E%3Cpath d='M14.5 10.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM19 19H5V5h14v14zm-4-4h-2v-4h-4V9h6v6z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 80px;
+            object-fit: cover;
+            min-height: 100px;
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: calc(100% - 40px);
+        }
+
+        /* 載入指示器 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            color: white;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid var(--accent-gold);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 全屏提示 */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .fullscreen-button {
+            padding: 15px 30px;
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        .fullscreen-button:hover {
+            background: #fbbf24;
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* 警告窗口 */
+        .violation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .violation-content {
+            background: #2a2a40;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            max-width: 80%;
+            border: 2px solid var(--accent-gold);
+        }
+
+        .violation-close-button {
+            padding: 12px 25px;
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .violation-close-button:hover {
+            background: #fbbf24;
+        }
+
+        /* 視頻背景 - 雙擊光標樣式 */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .video-background video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100vw;
+            min-height: 100vh;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            object-fit: cover;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        /* 視頻控制 */
+        .video-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .video-controls button {
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .video-controls button:hover {
+            background: var(--accent-gold);
+            transform: scale(1.1);
+        }
+
+        /* 保護徽章 */
+        .protection-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        /* 左側功能表 - 隱藏式設計 */
+        .left-auto-menu {
+            position: fixed;
+            left: -170px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            transition: left 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .left-auto-menu:hover {
+            left: 0;
+        }
+
+        .left-menu-toggle {
+            width: 50px;
+            height: 50px;
+            background-color: var(--colore-quattro);
+            color: var(--bianco);
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--colore-due);
+            position: absolute;
+            right: -50px;
+            top: 0;
+        }
+
+        .left-menu-content {
+            background-color: var(--colore-quattro);
+            border-radius: 0 8px 8px 0;
+            border: 1px solid var(--colore-due);
+            border-left: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            width: 170px;
+        }
+
+        .left-menu-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left-menu-nav li {
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s ease;
+            transition-delay: calc(var(--item-index) * 0.1s);
+        }
+
+        .left-auto-menu:hover .left-menu-nav li {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .left-menu-nav li:nth-child(1) { --item-index: 1; }
+        .left-menu-nav li:nth-child(2) { --item-index: 2; }
+        .left-menu-nav li:nth-child(3) { --item-index: 3; }
+        .left-menu-nav li:nth-child(4) { --item-index: 4; }
+        .left-menu-nav li:nth-child(5) { --item-index: 5; }
+        .left-menu-nav li:nth-child(6) { --item-index: 6; }
+        .left-menu-nav li:nth-child(7) { --item-index: 7; }
+        .left-menu-nav li:nth-child(8) { --item-index: 8; }
+        .left-menu-nav li:nth-child(9) { --item-index: 9; }
+
+        .left-menu-nav a {
+            color: var(--colore-due);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+
+        .left-menu-nav a:hover {
+            color: var(--accent-gold);
+            background-color: rgba(255, 255, 255, 0.05);
+            transform: translateX(5px);
+        }
+
+        .left-menu-nav i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .left-menu-nav span {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* 頭部 */
+        header {
+            background-color: rgba(32, 33, 35, 0.95);
+            padding: 15px 20px;
+            position: fixed;
+            width: 100vw;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            width: 250px;
+        }
+
+        .logo-text {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 2rem;
+            background: linear-gradient(to right, var(--accent-gold), var(--accent-cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .logo-subtext {
+            font-size: 0.9rem;
+            color: var(--colore-due);
+            margin-top: -5px;
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .language-switcher {
+            color: var(--colore-due);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .language-switcher span {
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .language-switcher span.active {
+            background-color: var(--colore-quattro);
+            color: var(--bianco);
+        }
+
+        .contact-btn {
+            background: linear-gradient(to right, var(--accent-gold), #fbbf24);
+            color: var(--primary-dark);
+            padding: 8px 25px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* 隱藏功能表 */
+        .hidden-menu-btn {
+            display: none;
+            color: white;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hidden-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .hidden-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: var(--colore-quattro);
+            z-index: 1000;
+            padding: 80px 30px 30px;
+            transition: right 0.3s ease;
+            border-left: 1px solid var(--colore-tre);
+            overflow-y: auto;
+        }
+
+        .hidden-menu-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--colore-due);
+        }
+
+        .hidden-menu-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .hidden-menu-nav li {
+            margin-bottom: 15px;
+        }
+
+        .hidden-menu-nav a {
+            color: var(--colore-due);
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+            padding: 10px 0;
+            transition: color 0.3s;
+            border-bottom: 1px solid rgba(188, 181, 177, 0.1);
+        }
+
+        .hidden-menu-nav a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* 標題區域 */
+        .header-section {
+            text-align: center;
+            padding: 160px 20px 80px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-section h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(to right, var(--accent-gold), var(--accent-cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 15px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-section .subtitle {
+            font-size: 1.3rem;
+            color: #cbd5e1;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .tagline {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--accent-gold);
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-size: 1.1rem;
+            color: var(--accent-gold);
+            margin-top: 15px;
+        }
+
+        /* 故事輪播 - 繪本風格改造 */
+        .story-carousel {
+            position: relative;
+            height: 75vh;
+            min-height: 700px;
+            margin: 30px auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .carousel-container {
+            display: flex;
+            height: 100%;
+            transition: var(--transition);
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            position: relative;
+        }
+
+        /* 繪本圖片容器 - 替換原漸變背景 */
+        .slide-image {
+            width: 60%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            /* 新增：容器默認背景，防止圖片加載前空白 */
+            background-color: rgba(20, 21, 23, 0.9);
+        }
+
+        /* 繪本圖片樣式 - 增加繪本質感 */
+        .slide-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: sepia(10%) brightness(0.9);
+            transition: all 0.8s ease-in-out;
+            /* 新增：延遲加載優化，確保圖片加載穩定 */
+            opacity: 0;
+            animation: imgFadeIn 0.8s ease-in-out forwards 0.3s;
+        }
+
+        /* 新增：圖片漸入動畫，解決加載閃爍問題 */
+        @keyframes imgFadeIn {
+            from { opacity: 0; transform: scale(1.05); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .slide-image:hover img {
+            filter: sepia(0%) brightness(1);
+            transform: scale(1.02);
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.5) 50%, transparent 100%);
+        }
+
+        .slide-content {
+            width: 40%;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(to left, rgba(20, 21, 23, 0.98), transparent);
+        }
+
+        .scene-number {
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .slide-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            color: white;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .slide-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-gold), var(--accent-cyan));
+            border-radius: 3px;
+        }
+
+        .slide-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .highlight-box {
+            background: rgba(212, 175, 55, 0.1);
+            border-left: 4px solid var(--accent-gold);
+            padding: 20px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 20px;
+        }
+
+        .highlight-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent-gold);
+            font-style: italic;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* 導航按鈕 */
+        .carousel-nav {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: var(--accent-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        /* 進度指示器 */
+        .progress-indicator {
+            position: absolute;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .progress-dot.active {
+            background: var(--accent-gold);
+            transform: scale(1.3);
+            box-shadow: 0 0 15px var(--accent-gold);
+        }
+
+        /* 場景快速導航 */
+        .scene-navigation {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 40px;
+            padding: 0 20px;
+        }
+
+        .scene-btn {
+            padding: 12px 24px;
+            background: rgba(30, 64, 175, 0.2);
+            border: 1px solid rgba(30, 64, 175, 0.5);
+            border-radius: 50px;
+            color: #93c5fd;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .scene-btn:hover {
+            background: var(--primary-blue);
+            transform: translateY(-3px);
+        }
+
+        .scene-btn.active {
+            background: var(--accent-gold);
+            color: var(--primary-dark);
+            border-color: var(--accent-gold);
+        }
+
+        /* 內容區塊 */
+        .content-section {
+            padding: 120px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .dark-bg {
+            background-color: rgba(32, 33, 35, 0.95);
+            color: var(--colore-due);
+        }
+
+        .darker-bg {
+            background-color: rgba(20, 21, 23, 0.98);
+            color: var(--colore-due);
+            border-top: 1px solid var(--colore-tre);
+            border-bottom: 1px solid var(--colore-tre);
+        }
+
+        .light-bg {
+            background-color: rgba(247, 246, 245, 0.95);
+            color: var(--colore-quattro);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, var(--accent-gold), var(--accent-cyan));
+        }
+
+        .section-text {
+            max-width: 900px;
+            margin: 0 auto 40px;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .highlight {
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        /* 比較表格 */
+        .comparison-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(32,33,35,0.98) 0%, rgba(20,21,23,0.98) 100%);
+        }
+        .comparison-table-container {
+            overflow-x: auto;
+            margin: 40px auto;
+            border-radius: 10px;
+            border: 1px solid var(--colore-tre);
+            max-width: 90%;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .comparison-table th {
+            background-color: var(--colore-quattro);
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--colore-tre);
+        }
+
+        .comparison-table td {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--colore-tre);
+        }
+
+        .system-name {
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: var(--bianco);
+        }
+
+        .feature-cell {
+            text-align: left;
+            font-weight: 500;
+            color: var(--colore-due);
+        }
+
+        .check-mark {
+            color: var(--accent-green);
+            font-size: 1.5rem;
+        }
+
+        .cross-mark {
+            color: var(--accent-red);
+            font-size: 1.5rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 5px;
+        }
+
+        .badge-premium {
+            background: linear-gradient(to right, var(--accent-gold), #fbbf24);
+            color: var(--primary-dark);
+        }
+
+        .badge-standard {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .badge-basic {
+            background-color: var(--colore-tre);
+            color: white;
+        }
+
+        /* 成本分析圖表 */
+        .chart-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 50px auto;
+            max-width: 1000px;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .chart-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--bianco);
+        }
+
+        .chart {
+            height: 400px;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 30%;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s;
+        }
+
+        .chart-bar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .chart-label {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: var(--bianco);
+        }
+
+        .chart-value {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            color: var(--bianco);
+        }
+
+        /* 功能展示區 */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 50px auto;
+            max-width: 90%;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--colore-tre);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent-gold);
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--bianco);
+        }
+
+        .feature-desc {
+            color: var(--colore-due);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: var(--colore-due);
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        /* ROI計算器 */
+        .roi-calculator {
+            background: linear-gradient(135deg, rgba(32,33,35,0.95) 0%, rgba(20,21,23,0.95) 100%);
+            border-radius: 15px;
+            padding: 50px;
+            margin: 60px auto;
+            max-width: 1000px;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .calculator-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--colore-due);
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--colore-tre);
+            border-radius: 5px;
+            color: var(--bianco);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .roi-results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--colore-tre);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: var(--colore-due);
+        }
+
+        .result-value {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+
+        /* 數據卡片 */
+        .data-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 60px auto;
+            padding: 0 20px;
+            max-width: 90%;
+        }
+
+        .data-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+        }
+
+        .data-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .data-card i {
+            font-size: 2.5rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+        }
+
+        .data-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .data-card p {
+            color: #94a3b8;
+            line-height: 1.7;
+        }
+
+        /* 成功案例 */
+        .case-studies {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(20,21,23,0.98) 0%, rgba(32,33,35,0.98) 100%);
+        }
+
+        .case-study-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 40px;
+            margin: 40px auto;
+            border: 1px solid var(--colore-tre);
+            position: relative;
+            max-width: 90%;
+        }
+
+        .case-study-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .case-study-title {
+            font-size: 1.8rem;
+            color: var(--bianco);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .metric {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: var(--colore-due);
+            font-size: 0.9rem;
+        }
+
+        /* CTA區域 */
+        .cta-section {
+            padding: 150px 0;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            opacity: 0;
+        }
+
+        .cta-section:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            animation: pulse 8s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .cta-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-subtitle {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            margin-bottom: 50px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-btn {
+            padding: 20px 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 250px;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-primary {
+            background: linear-gradient(to right, var(--accent-gold), #fbbf24);
+            color: var(--primary-dark);
+        }
+
+        .cta-secondary {
+            background-color: transparent;
+            color: var(--bianco);
+            border: 2px solid var(--accent-gold);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .cta-highlight {
+            display: block;
+            margin-top: 25px;
+            font-size: 1.1rem;
+            color: var(--accent-cyan);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 頁腳 */
+        footer {
+            background-color: rgba(20, 21, 23, 0.98);
+            padding: 80px 0 40px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            width: 100vw;
+            border-top: 1px solid var(--colore-tre);
+        }
+
+        .footer-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+            color: var(--bianco);
+        }
+
+        .footer-address {
+            margin-bottom: 30px;
+            color: var(--colore-due);
+        }
+
+        .contact-info {
+            margin-bottom: 40px;
+            color: var(--colore-due);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            padding: 0;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            background-color: var(--colore-quattro);
+            color: var(--colore-due);
+            transition: all 0.3s;
+            border: 1px solid var(--colore-tre);
+        }
+
+        .social-link:hover {
+            background-color: var(--accent-gold);
+            color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            margin-top: 30px;
+            color: var(--colore-due);
+        }
+
+        /* 動畫效果 */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 自定義滾動條 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-gold);
+            border-radius: 5px;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 1200px) {
+            .header-section h1 {
+                font-size: 3rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .chart {
+                height: 300px;
+            }
+
+            .slide-image { width: 50%; }
+            .slide-content { width: 50%; }
+        }
+
+        @media (max-width: 992px) {
+            .header-right {
+                display: none;
+            }
+
+            .hidden-menu-btn {
+                display: block;
+            }
+
+            .left-auto-menu {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .data-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table-container {
+                margin: 20px auto;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                max-width: 100%;
+            }
+
+            .carousel-slide {
+                flex-direction: column;
+            }
+
+            .slide-image, .slide-content {
+                width: 100%;
+            }
+
+            .slide-image {
+                height: 40%;
+            }
+
+            .slide-content {
+                height: 60%;
+                padding: 40px 30px;
+                background: linear-gradient(to top, rgba(20, 21, 23, 0.98), transparent);
+            }
+
+            .story-carousel {
+                height: 85vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 2.2rem;
+            }
+
+            .header-section {
+                padding: 120px 20px 60px;
+            }
+
+            .slide-title {
+                font-size: 1.8rem;
+            }
+
+            .slide-text {
+                font-size: 1.1rem;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .content-section {
+                padding: 80px 0;
+            }
+
+            .chart-container, .roi-calculator {
+                padding: 20px;
+                margin: 30px auto;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                max-width: 100%;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hidden-menu {
+                width: 250px;
+            }
+
+            .cta-subtitle {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-section h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+
+            .story-carousel {
+                min-height: 600px;
+                height: auto;
+            }
+
+            .cta-btn {
+                min-width: 200px;
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 載入動畫 -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner"></div>
+        <p>系統初始化中...</p>
+    </div>
+
+    <!-- 全屏提示 -->
+    <div class="fullscreen-overlay" id="fullscreen-overlay">
+        <h2>智慧點餐系統展示平台</h2>
+        <p>請進入全螢幕模式以獲得最佳視覺體驗</p>
+        <button class="fullscreen-button" id="fullscreen-button">
+            <i class="fas fa-expand"></i> 進入全螢幕模式
+        </button>
+        <p style="margin-top: 20px; font-size: 14px; color: #aaa;">
+            提示：按 F11 鍵可快速切換全螢幕模式，雙擊背景視頻也可全屏
+        </p>
+    </div>
+
+    <!-- 警告彈窗 -->
+    <div class="violation-modal" id="violation-modal">
+        <div class="violation-content">
+            <h2><i class="fas fa-exclamation-circle"></i> 演示保護模式</h2>
+            <p>您已退出全螢幕演示模式。為確保最佳體驗，建議保持全螢幕狀態。</p>
+            <p style="margin-top: 20px; color: var(--accent-gold);">
+                系統展示將在30秒後繼續
+            </p>
+            <button class="violation-close-button" id="violation-close-button">返回全螢幕</button>
+        </div>
+    </div>
+
+    <!-- 視頻背景 - 替換為 image/1.mp4，新增雙擊全屏功能 -->
+    <div class="video-background" id="videoBackground">
+        <video id="bg-video" autoplay muted loop playsinline>
+            <source src="image/1.mp4" type="video/mp4">
+            您的瀏覽器不支援視頻播放。
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <!-- 視頻控制 -->
+    <div class="video-controls">
+        <button id="mute-toggle" title="靜音/取消靜音">
+            <i class="fas fa-volume-mute"></i>
+        </button>
+        <button id="pause-play" title="暫停/播放">
+            <i class="fas fa-pause"></i>
+        </button>
+    </div>
+
+    <!-- 保護徽章 -->
+    <div class="protection-badge">
+        <i class="fas fa-shield-alt"></i>
+        <span>演示系統 | 版權保護 | 雙擊視頻全屏</span>
+    </div>
+
+    <!-- 左側功能表 - 隱藏式 -->
+    <div class="left-auto-menu" id="leftAutoMenu">
+        <button class="left-menu-toggle" id="leftMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="left-menu-content">
+            <nav class="left-menu-nav">
+                <ul>
+                    <li><a href="#intro" class="menu-link"><i class="fas fa-home"></i> <span>首頁</span></a></li>
+                    <li><a href="#story" class="menu-link"><i class="fas fa-book"></i> <span>視覺故事</span></a></li>
+                    <li><a href="#comparison" class="menu-link"><i class="fas fa-balance-scale"></i> <span>功能比較</span></a></li>
+                    <li><a href="#cost" class="menu-link"><i class="fas fa-chart-line"></i> <span>成本分析</span></a></li>
+                    <li><a href="#features" class="menu-link"><i class="fas fa-star"></i> <span>獨家功能</span></a></li>
+                    <li><a href="#roi" class="menu-link"><i class="fas fa-calculator"></i> <span>ROI計算</span></a></li>
+                    <li><a href="#data" class="menu-link"><i class="fas fa-chart-bar"></i> <span>數據卡片</span></a></li>
+                    <li><a href="#cases" class="menu-link"><i class="fas fa-briefcase"></i> <span>案例研究</span></a></li>
+                    <li><a href="#cta" class="menu-link"><i class="fas fa-phone"></i> <span>聯絡我們</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- 移動端菜單 -->
+    <div class="hidden-menu-overlay" id="menuOverlay"></div>
+    <div class="hidden-menu" id="hiddenMenu">
+        <button class="hidden-menu-close" id="menuClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <nav class="hidden-menu-nav">
+            <ul>
+                <li><a href="#intro" class="mobile-menu-link">首頁</a></li>
+                <li><a href="#story" class="mobile-menu-link">視覺故事</a></li>
+                <li><a href="#comparison" class="mobile-menu-link">功能比較</a></li>
+                <li><a href="#cost" class="mobile-menu-link">成本分析</a></li>
+                <li><a href="#features" class="mobile-menu-link">獨家功能</a></li>
+                <li><a href="#roi" class="mobile-menu-link">ROI計算</a></li>
+                <li><a href="#data" class="mobile-menu-link">數據卡片</a></li>
+                <li><a href="#cases" class="mobile-menu-link">案例研究</a></li>
+                <li><a href="#cta" class="mobile-menu-link">聯絡我們</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 頭部 -->
+    <header id="mainHeader">
+        <div class="logo">
+            <div class="logo-text">智慧點餐系統</div>
+            <div class="logo-subtext">整合演示平台</div>
+        </div>
+        <button class="hidden-menu-btn" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="header-right">
+            <div class="language-switcher">
+                <span class="active">繁體中文</span> | <span>English</span>
+            </div>
+            <a href="#cta" class="contact-btn">免費諮詢</a>
+        </div>
+    </header>
+
+    <!-- 首頁區域 -->
+    <section class="header-section" id="intro">
+        <h1>智慧點餐系統整合平台</h1>
+        <p class="subtitle">
+            結合視覺故事敘事與功能性展示的全新演示體驗<br>
+            重新定義餐飲業數位轉型的可能性
+        </p>
+        <div class="tagline">
+            <i class="fas fa-bolt"></i> 融合美學與功能的完整解決方案
+        </div>
+    </section>
+
+    <!-- 視覺故事輪播 - 繪本風格 -->
+    <section class="content-section dark-bg" id="story">
+        <div class="container">
+            <h2 class="section-title">視覺故事展示（繪本版）</h2>
+            <p class="section-text">通過18個精心設計的繪本場景，展示智慧點餐系統的完整價值主張</p>
+            
+            <div class="story-carousel">
+                <div class="carousel-container" id="carouselContainer">
+                    <!-- 幻燈片將通過JavaScript動態生成 -->
+                </div>
+                
+                <!-- 導航按鈕 -->
+                <div class="carousel-nav">
+                    <button class="nav-btn" id="prevBtn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="nav-btn" id="nextBtn">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <!-- 進度指示器 -->
+                <div class="progress-indicator" id="progressIndicator">
+                    <!-- 將通過JavaScript動態生成 -->
+                </div>
+            </div>
+            
+            <!-- 場景快速導航 -->
+            <div class="scene-navigation" id="sceneNav">
+                <!-- 將通過JavaScript動態生成 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 比較表格 -->
+    <section class="content-section darker-bg" id="comparison">
+        <div class="container">
+            <h2 class="section-title">系統功能比較分析</h2>
+            <p class="section-text">詳細比較不同系統的功能特性與成本結構</p>
+            
+            <div class="comparison-table-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">功能/成本項目</th>
+                            <th style="width: 25%; background-color: rgba(203, 51, 79, 0.1);">傳統點餐系統</th>
+                            <th style="width: 25%; background-color: rgba(103, 135, 106, 0.1);">市場中等系統</th>
+                            <th style="width: 25%; background-color: rgba(212, 175, 55, 0.1);">智慧點餐系統</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="feature-cell">系統架構</td>
+                            <td>封閉式系統</td>
+                            <td>部分開放</td>
+                            <td><span class="badge badge-premium">完全開放</span></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-cell">AI智能推薦</td>
+                            <td><i class="fas fa-times cross-mark"></i></td>
+                            <td><i class="fas fa-times cross-mark"></i></td>
+                            <td><i class="fas fa-check check-mark"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-cell">數據分析</td>
+                            <td>基礎報表</td>
+                            <td>標準分析</td>
+                            <td><span class="badge badge-premium">預測分析</span></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-cell">整合能力</td>
+                            <td>有限整合</td>
+                            <td>API基礎</td>
+                            <td><span class="badge badge-premium">完整生態</span></td>
+                        </tr>
+                        <tr>
+                            <td class="feature-cell">月費模式</td>
+                            <td>NT$ 2,000-10,000</td>
+                            <td>NT$ 1,500-5,000</td>
+                            <td><strong>零月費</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- 成本分析 -->
+    <section class="content-section darker-bg" id="cost">
+        <div class="container">
+            <h2 class="section-title">成本效益量化分析</h2>
+            <p class="section-text">基於五年使用週期的投資回報分析</p>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">總擁有成本(TCO)比較</h3>
+                <div class="chart" id="costChart">
+                    <!-- 圖表將由JavaScript動態生成 -->
+                </div>
+                
+                <div style="text-align: center; margin-top: 50px;">
+                    <h3 style="color: var(--accent-green); font-size: 1.8rem;">投資報酬率差異達 <span style="font-size: 2.5rem; color: var(--accent-gold);">8:1</span></h3>
+                    <p>長期使用成本效益更加顯著</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 獨家功能 -->
+    <section class="content-section dark-bg" id="features">
+        <div class="container">
+            <h2 class="section-title">核心創新功能展示</h2>
+            <p class="section-text">超越傳統系統的技術優勢與功能創新</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI智能引擎</h3>
+                    <p class="feature-desc">基於機器學習的智能推薦系統，提升客戶體驗與銷售轉化率</p>
+                    <ul class="feature-list">
+                        <li>行為分析與預測</li>
+                        <li>個性化推薦</li>
+                        <li>動態定價策略</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3 class="feature-title">數據分析平台</h3>
+                    <p class="feature-desc">實時數據可視化與深度分析，支持數據驅動的決策制定</p>
+                    <ul class="feature-list">
+                        <li>實時儀表板</li>
+                        <li>趨勢預測</li>
+                        <li>績效分析</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">跨平台兼容</h3>
+                    <p class="feature-desc">全平台無縫體驗，從桌面到移動設備的完整解決方案</p>
+                    <ul class="feature-list">
+                        <li>響應式設計</li>
+                        <li>原生應用體驗</li>
+                        <li>離線功能支持</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">企業級安全架構</h3>
+                    <p class="feature-desc">企業級安全架構，確保數據隱私與系統穩定性</p>
+                    <ul class="feature-list">
+                        <li>端到端加密</li>
+                        <li>合規認證</li>
+                        <li>災難恢復</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI計算器 -->
+    <section class="content-section darker-bg" id="roi">
+        <div class="container">
+            <h2 class="section-title">投資回報率計算器</h2>
+            <p class="section-text">根據您的業務規模，計算具體的投資效益</p>
+            
+            <div class="roi-calculator">
+                <div class="calculator-inputs">
+                    <div class="input-group">
+                        <label for="monthlyRevenue">月營業額 (NT$)</label>
+                        <input type="number" id="monthlyRevenue" value="800000" min="100000" step="10000">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="employeeCount">員工人數</label>
+                        <input type="number" id="employeeCount" value="8" min="1" step="1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="currentWaste">運營效率 (%)</label>
+                        <input type="number" id="currentWaste" value="75" min="50" max="95" step="1">
+                    </div>
+                </div>
+                
+                <div class="roi-results" id="roiResults">
+                    <!-- 結果將由JavaScript動態生成 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 數據卡片 -->
+    <section class="content-section dark-bg" id="data">
+        <div class="container">
+            <h2 class="section-title">關鍵性能指標</h2>
+            <p class="section-text">基於實際部署數據的系統性能表現</p>
+            
+            <div class="data-cards">
+                <div class="data-card">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>2258% ROI</h3>
+                    <p>平均首月投資回報率，基於實際客戶數據計算</p>
+                </div>
+                <div class="data-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>72小時部署</h3>
+                    <p>標準部署時間，從簽約到系統全面上線運行</p>
+                </div>
+                <div class="data-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>99.9% 可用性</h3>
+                    <p>系統運行穩定性，基於過去12個月的監控數據</p>
+                </div>
+                <div class="data-card">
+                    <i class="fas fa-user-check"></i>
+                    <h3>95% 滿意度</h3>
+                    <p>客戶滿意度評分，基於季度調查結果</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 成功案例 -->
+    <section class="case-studies content-section darker-bg" id="cases">
+        <div class="container">
+            <h2 class="section-title">實際部署案例</h2>
+            <p class="section-text">真實客戶的成功經驗與量化效益</p>
+            
+            <div class="case-study-card">
+                <div class="case-study-header">
+                    <h3 class="case-study-title">連鎖餐飲集團</h3>
+                    <span class="badge badge-premium">12個月部署驗證</span>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric">
+                        <div class="metric-value">1.2M</div>
+                        <div class="metric-label">月成本節省 (NT$)</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">35%</div>
+                        <div class="metric-label">運營效率提升</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">28%</div>
+                        <div class="metric-label">客單價增長</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">4.7 ★</div>
+                        <div class="metric-label">客戶評分</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA區域 -->
+    <section class="cta-section" id="cta">
+        <div class="container">
+            <h2 class="cta-title">開始您的數位轉型之旅</h2>
+            <p class="cta-subtitle">
+                預約專屬演示，體驗智慧點餐系統的完整功能<br>
+                我們將為您提供個性化解決方案與投資回報分析
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="#" class="cta-btn cta-primary" id="consultBtn">
+                    <i class="fas fa-calendar-check"></i> 預約演示
+                </a>
+                <a href="#" class="cta-btn cta-secondary" id="calcBtn">
+                    <i class="fas fa-calculator"></i> ROI分析
+                </a>
+            </div>
+            
+            <p class="cta-highlight">
+                <i class="fas fa-star"></i> 前50位預約客戶免費獲得系統評估報告
+            </p>
+        </div>
+    </section>
+
+    <!-- 頁腳 -->
+    <footer>
+        <h2 class="footer-title">智慧點餐系統平台</h2>
+        <p class="footer-address">整合視覺演示與功能展示的完整解決方案</p>
+        
+        <div class="contact-info">
+            <p><i class="fas fa-envelope"></i> contact@smartpos.com</p>
+            <p><i class="fas fa-phone"></i> (02) 1234-5678</p>
+        </div>
+        
+        <div class="social-links">
+            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-line"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2024 智慧點餐系統整合平台. 保留所有權利.<br>
+            本展示平台結合了視覺敘事與功能演示，提供完整的系統體驗。
+        </div>
+    </footer>
+
+    <script>
+        // DOM元素 - 完整補全，包含所有需要操作的元素（解決undefined錯誤）
+        const dom = {
+            loadingOverlay: document.getElementById('loading-overlay'),
+            fullscreenOverlay: document.getElementById('fullscreen-overlay'),
+            fullscreenButton: document.getElementById('fullscreen-button'),
+            violationModal: document.getElementById('violation-modal'),
+            violationCloseButton: document.getElementById('violation-close-button'),
+            bgVideo: document.getElementById('bg-video'),
+            videoBackground: document.getElementById('videoBackground'),
+            muteToggle: document.getElementById('mute-toggle'),
+            pausePlay: document.getElementById('pause-play'),
+            menuToggle: document.getElementById('menuToggle'),
+            menuClose: document.getElementById('menuClose'),
+            menuOverlay: document.getElementById('menuOverlay'),
+            hiddenMenu: document.getElementById('hiddenMenu'),
+            leftAutoMenu: document.getElementById('leftAutoMenu'),
+            leftMenuToggle: document.getElementById('leftMenuToggle'),
+            mainHeader: document.getElementById('mainHeader'),
+            costChart: document.getElementById('costChart'),
+            roiResults: document.getElementById('roiResults'),
+            consultBtn: document.getElementById('consultBtn'),
+            calcBtn: document.getElementById('calcBtn'),
+            carouselContainer: document.getElementById('carouselContainer'),
+            progressIndicator: document.getElementById('progressIndicator'),
+            sceneNav: document.getElementById('sceneNav'),
+            prevBtn: document.getElementById('prevBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            // 完整補全表單輸入元素（解決TypeError核心）
+            monthlyRevenue: document.getElementById('monthlyRevenue'),
+            employeeCount: document.getElementById('employeeCount'),
+            currentWaste: document.getElementById('currentWaste')
+        };
+
+        // 故事數據
+        const storyData = [
+            { id: 1, title: "系統概覽", text: "智慧點餐系統的整體架構與設計理念，展示現代餐飲解決方案的創新思維。", highlight: "融合技術與美學的完整解決方案", icon: "fa-home" },
+            { id: 2, title: "用戶體驗", text: "直觀友好的界面設計，確保顧客能夠快速上手，提升整體用餐體驗。", highlight: "以用戶為中心的設計哲學", icon: "fa-users" },
+            { id: 3, title: "智能推薦", text: "基於AI算法的智能推薦系統，根據顧客偏好提供個性化建議。", highlight: "數據驅動的個性化體驗", icon: "fa-robot" },
+            { id: 4, title: "數據分析", text: "實時數據可視化與深度分析功能，幫助管理者做出更明智的決策。", highlight: "從數據中提取商業洞察", icon: "fa-chart-bar" },
+            { id: 5, title: "系統集成", text: "與現有系統的無縫集成能力，確保平穩過渡和高效協同工作。", highlight: "開放式生態系統整合", icon: "fa-puzzle-piece" },
+            { id: 6, title: "移動應用", text: "完整的移動端支持，讓顧客和管理者都能隨時隨地訪問系統功能。", highlight: "隨時隨地的無縫體驗", icon: "fa-mobile-alt" },
+            { id: 7, title: "後台管理", text: "強大的後台管理系統，簡化日常運營任務，提升管理效率。", highlight: "簡化複雜的運營管理", icon: "fa-cogs" },
+            { id: 8, title: "報表分析", text: "多維度的報表系統，提供全面的業務洞察和績效分析。", highlight: "深入洞察業務表現", icon: "fa-file-alt" },
+            { id: 9, title: "安全架構", text: "企業級安全防護，確保數據隱私和系統穩定運行。", highlight: "安全可靠的系統架構", icon: "fa-shield-alt" },
+            { id: 10, title: "擴展能力", text: "模塊化設計支持未來功能擴展，適應業務發展需求。", highlight: "面向未來的系統設計", icon: "fa-expand" },
+            { id: 11, title: "庫存管理", text: "實時庫存追蹤與自動提醒，有效降低浪費，優化採購策略。", highlight: "精準管控，降本增效", icon: "fa-warehouse" },
+            { id: 12, title: "會員體系", text: "完整的會員等級與積分系統，提升客戶忠誠度與複購率。", highlight: "鎖定核心客戶，提升留存", icon: "fa-id-card" },
+            { id: 13, title: "營銷工具", text: "多樣化的營銷活動模板，支持節日促銷與定向推廣。", highlight: "輕鬆開展，效果可視", icon: "fa-bullhorn" },
+            { id: 14, title: "廚房打印", text: "無縫對接廚房打印設備，減少出餐差錯，提升出餐效率。", highlight: "前後台協同，高效出餐", icon: "fa-print" },
+            { id: 15, title: "支付整合", text: "支持多種支付方式，確保交易安全快捷，提升結帳體驗。", highlight: "全渠道支付，便捷安全", icon: "fa-credit-card" },
+            { id: 16, title: "桌台管理", text: "智能桌台管理，支持預約與拼桌，優化餐廳座位利用率。", highlight: "精準管控，提升翻台率", icon: "fa-table" },
+            { id: 17, title: "員工管理", text: "員工權限分級與業績統計，簡化人事管理，提升團隊效率。", highlight: "權責分明，激勵有效", icon: "fa-user-tie" },
+            { id: 18, title: "數位轉型", text: "從傳統到智能的完整轉型路徑，幫助餐飲企業實現數位化升級。", highlight: "一步到位，長期獲益", icon: "fa-arrow-up-right-dots" }
+        ];
+
+        // 全局狀態變量
+        let isFullscreen = false;
+        let autoSlideInterval = null;
+        let currentSlide = 0;
+        const totalSlides = storyData.length;
+
+        // 全螢幕控制函數
+        function enterFullscreen() {
+            if (!document.fullscreenElement) {
+                const element = document.documentElement;
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+                isFullscreen = true;
+                dom.fullscreenOverlay.style.display = 'none';
+            }
+        }
+
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            isFullscreen = false;
+        }
+
+        function handleFullscreenChange() {
+            if (!document.fullscreenElement && !document.mozFullScreenElement && 
+                !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                isFullscreen = false;
+                setTimeout(() => {
+                    dom.violationModal.style.display = 'flex';
+                }, 500);
+            }
+        }
+
+        // 視頻雙擊觸發全屏功能
+        function handleVideoDblClick() {
+            if (!isFullscreen) {
+                enterFullscreen();
+            } else {
+                dom.bgVideo.play();
+            }
+        }
+
+        // 成本圖表生成函數
+        function createCostChart() {
+            const chartData = [
+                { label: '傳統系統', value: 410000, color: 'var(--accent-red)' },
+                { label: '市場中等', value: 270000, color: 'var(--colore-tre)' },
+                { label: '智慧系統', value: 120000, color: 'var(--accent-gold)' }
+            ];
+            
+            const maxValue = Math.max(...chartData.map(d => d.value));
+            const chartHeight = 400;
+            
+            dom.costChart.innerHTML = '';
+            
+            chartData.forEach((data, index) => {
+                const barHeight = (data.value / maxValue) * 300;
+                const leftPosition = 10 + (index * 33) + '%';
+                
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${barHeight}px`;
+                bar.style.left = leftPosition;
+                bar.style.backgroundColor = data.color;
+                bar.style.width = '25%';
+                
+                const valueLabel = document.createElement('div');
+                valueLabel.className = 'chart-value';
+                valueLabel.textContent = `NT$ ${data.value.toLocaleString()}`;
+                bar.appendChild(valueLabel);
+                
+                const textLabel = document.createElement('div');
+                textLabel.className = 'chart-label';
+                textLabel.textContent = data.label;
+                bar.appendChild(textLabel);
+                
+                dom.costChart.appendChild(bar);
+            });
+        }
+
+        // ROI計算器 - 增加防護判斷，避免undefined錯誤
+        function calculateROI() {
+            // 防護判斷：元素存在再取值，否則使用默認值
+            const monthlyRevenue = dom.monthlyRevenue ? parseInt(dom.monthlyRevenue.value) || 800000 : 800000;
+            const employeeCount = dom.employeeCount ? parseInt(dom.employeeCount.value) || 8 : 8;
+            const currentWaste = dom.currentWaste ? parseInt(dom.currentWaste.value) || 75 : 75;
+            
+            // 計算邏輯（補全原代碼缺失的*100，確保ROI百分比正常）
+            const efficiencyImprovement = (currentWaste / 100);
+            const laborSavings = employeeCount * 35000 * 12 * (1 - efficiencyImprovement) * 0.15;
+            const revenueGrowth = monthlyRevenue * 12 * 0.1;
+            const wasteReduction = monthlyRevenue * 12 * 0.05;
+            
+            const annualBenefits = laborSavings + revenueGrowth + wasteReduction;
+            const systemCost = 120000;
+            const roi = ((annualBenefits - systemCost) / systemCost * 100).toFixed(0);
+            
+            const resultsHTML = `
+                <div class="result-item">
+                    <span class="result-label">年效益總值</span>
+                    <span class="result-value">NT$ ${Math.round(annualBenefits).toLocaleString()}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">系統投資成本</span>
+                    <span class="result-value">NT$ ${systemCost.toLocaleString()}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">投資回收期</span>
+                    <span class="result-value">< 2個月</span>
+                </div>
+                <div class="result-item" style="border-top: 2px solid var(--accent-green); padding-top: 20px;">
+                    <span class="result-label">投資報酬率(ROI)</span>
+                    <span class="result-value" style="font-size: 2rem; color: var(--accent-gold);">${roi}%</span>
+                </div>
+            `;
+            
+            dom.roiResults.innerHTML = resultsHTML;
+        }
+
+        // 故事輪播初始化與控制函數
+        function initCarousel() {
+            // 生成輪播幻燈片
+            storyData.forEach((scene, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.dataset.index = index;
+                
+                // 圖片加載失敗兜底（onerror事件）
+                const imagePath = `image/${index}.png`;
+                
+                slide.innerHTML = `
+                    <div class="slide-image">
+                        <img src="${imagePath}" alt="繪本場景 ${scene.id} - ${scene.title}" loading="lazy" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23bcb5b1\'%3E%3Cpath d=\'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z\'/%3E%3Cpath d=\'M14.5 10.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5 1.5.67 1.5 1.5zM19 19H5V5h14v14zm-4-4h-2v-4h-4V9h6v6z\'/%3C/svg%3E';">
+                        <div class="image-overlay"></div>
+                        <div style="position: absolute; top: 40px; left: 40px; font-size: 120px; opacity: 0.1;">
+                            <i class="fas ${scene.icon}"></i>
+                        </div>
+                        <div style="position: absolute; bottom: 40px; right: 40px; background: rgba(0,0,0,0.7); padding: 15px 25px; border-radius: 12px; border-left: 4px solid var(--accent-gold);">
+                            <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent-gold);">${scene.id.toString().padStart(2, '0')}</div>
+                            <div style="font-size: 0.9rem; color: #94a3b8;">SCENE</div>
+                        </div>
+                    </div>
+                    <div class="slide-content">
+                        <div class="scene-number">Chapter ${scene.id} / ${totalSlides}</div>
+                        <h2 class="slide-title">${scene.title}</h2>
+                        <p class="slide-text">${scene.text}</p>
+                        <div class="highlight-box">
+                            <div class="highlight-text">"${scene.highlight}"</div>
+                        </div>
+                    </div>
+                `;
+                
+                dom.carouselContainer.appendChild(slide);
+                
+                // 創建進度點
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (index === 0) dot.classList.add('active');
+                dot.dataset.index = index;
+                dot.addEventListener('click', () => goToSlide(index));
+                dom.progressIndicator.appendChild(dot);
+                
+                // 創建場景導航按鈕
+                const navBtn = document.createElement('div');
+                navBtn.className = 'scene-btn';
+                if (index === 0) navBtn.classList.add('active');
+                navBtn.textContent = `場景 ${scene.id}`;
+                navBtn.dataset.index = index;
+                navBtn.addEventListener('click', () => goToSlide(index));
+                dom.sceneNav.appendChild(navBtn);
+            });
+            
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            dom.carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            document.querySelectorAll('.progress-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+            
+            document.querySelectorAll('.scene-btn').forEach((btn, index) => {
+                btn.classList.toggle('active', index === currentSlide);
+            });
+            
+            // 添加淡入動畫
+            const currentSlideElement = document.querySelectorAll('.carousel-slide')[currentSlide];
+            if (currentSlideElement) {
+                currentSlideElement.classList.add('fade-in');
+                setTimeout(() => {
+                    currentSlideElement.classList.remove('fade-in');
+                }, 800);
+            }
+        }
+
+        function goToSlide(index) {
+            if (index < 0) index = totalSlides - 1;
+            if (index >= totalSlides) index = 0;
+            
+            currentSlide = index;
+            updateCarousel();
+            resetAutoSlide();
+        }
+
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            goToSlide(currentSlide - 1);
+        }
+
+        function startAutoSlide() {
+            if (autoSlideInterval) clearInterval(autoSlideInterval);
+            autoSlideInterval = setInterval(nextSlide, 8000);
+        }
+
+        function resetAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+                startAutoSlide();
+            }
+        }
+
+        // 移動端菜單控制
+        function toggleMobileMenu() {
+            dom.hiddenMenu.style.right = '0';
+            dom.menuOverlay.style.opacity = '1';
+            dom.menuOverlay.style.visibility = 'visible';
+        }
+
+        function closeMobileMenu() {
+            dom.hiddenMenu.style.right = '-300px';
+            dom.menuOverlay.style.opacity = '0';
+            dom.menuOverlay.style.visibility = 'hidden';
+        }
+
+        // 初始化所有功能
+        function initFunctions() {
+            // 載入動畫隱藏
+            setTimeout(() => {
+                dom.loadingOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    dom.loadingOverlay.style.display = 'none';
+                    setTimeout(() => {
+                        dom.fullscreenOverlay.style.display = 'flex';
+                    }, 500);
+                }, 300);
+            }, 800);
+
+            // 全螢幕事件綁定
+            dom.fullscreenButton.addEventListener('click', enterFullscreen);
+            dom.violationCloseButton.addEventListener('click', () => {
+                enterFullscreen();
+                dom.violationModal.style.display = 'none';
+            });
+
+            // 視頻雙擊事件綁定
+            dom.videoBackground.addEventListener('dblclick', handleVideoDblClick);
+            dom.bgVideo.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                handleVideoDblClick();
+            });
+
+            // 全屏狀態變化監聽
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+            // 鍵盤快捷鍵
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F11') {
+                    e.preventDefault();
+                    if (!isFullscreen) {
+                        enterFullscreen();
+                    } else {
+                        exitFullscreen();
+                    }
+                }
+                
+                if (e.key === 'Escape' && isFullscreen) {
+                    exitFullscreen();
+                }
+                
+                // 故事輪播鍵盤控制
+                if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    nextSlide();
+                }
+            });
+
+            // 視頻控制按鈕
+            dom.muteToggle.addEventListener('click', () => {
+                dom.bgVideo.muted = !dom.bgVideo.muted;
+                dom.muteToggle.innerHTML = dom.bgVideo.muted ? 
+                    '<i class="fas fa-volume-mute"></i>' : 
+                    '<i class="fas fa-volume-up"></i>';
+            });
+
+            dom.pausePlay.addEventListener('click', () => {
+                if (dom.bgVideo.paused) {
+                    dom.bgVideo.play();
+                    dom.pausePlay.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    dom.bgVideo.pause();
+                    dom.pausePlay.innerHTML = '<i class="fas fa-play"></i>';
+                }
+            });
+
+            // 移動端菜單事件
+            dom.menuToggle.addEventListener('click', toggleMobileMenu);
+            dom.menuClose.addEventListener('click', closeMobileMenu);
+            dom.menuOverlay.addEventListener('click', closeMobileMenu);
+
+            // 左側菜單擴展
+            dom.leftMenuToggle.addEventListener('click', () => {
+                const menuContent = dom.leftAutoMenu.querySelector('.left-menu-content');
+                const currentWidth = menuContent.style.width;
+                const isExpanded = currentWidth === '200px';
+                menuContent.style.width = isExpanded ? '170px' : '200px';
+                
+                const spans = menuContent.querySelectorAll('span');
+                spans.forEach(span => {
+                    span.style.display = isExpanded ? 'none' : 'inline';
+                });
+            });
+
+            // ROI計算器事件綁定（增加元素存在性判斷）
+            const roiInputIds = ['monthlyRevenue', 'employeeCount', 'currentWaste'];
+            roiInputIds.forEach(id => {
+                const inputElement = document.getElementById(id);
+                if (inputElement) {
+                    inputElement.addEventListener('input', calculateROI);
+                }
+            });
+
+            // 按鈕點擊事件
+            dom.consultBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('感謝您的興趣！我們的專業顧問將在24小時內與您聯繫，安排專屬演示。\n\n聯絡電話：0800-123-456\n電子郵件：demo@smartpos.com');
+            });
+
+            dom.calcBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelector('#roi').scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // 故事輪播控制按鈕
+            dom.prevBtn.addEventListener('click', prevSlide);
+            dom.nextBtn.addEventListener('click', nextSlide);
+
+            // 初始化圖表、ROI、輪播
+            createCostChart();
+            calculateROI();
+            initCarousel();
+
+            // 滾動時左側菜單半透明
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                dom.leftAutoMenu.style.opacity = '0.3';
+                
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    dom.leftAutoMenu.style.opacity = '1';
+                }, 500);
+            });
+
+            // 平滑滾動
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        closeMobileMenu();
+                    }
+                });
+            });
+
+            // 3秒後啟動自動輪播
+            setTimeout(() => {
+                startAutoSlide();
+            }, 3000);
+        }
+
+        // 滾動動畫觀察器
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.data-card, .cta-section').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 窗口焦點控制
+        window.addEventListener('focus', startAutoSlide);
+        window.addEventListener('blur', () => {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+                autoSlideInterval = null;
+            }
+        });
+
+        // 禁止右鍵、複製、開發者工具
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+        document.addEventListener('paste', (e) => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                (e.ctrlKey && e.shiftKey && e.key === 'J') || (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                dom.violationModal.style.display = 'flex';
+            }
+        });
+
+        // 頁面加載完成後初始化
+        document.addEventListener('DOMContentLoaded', initFunctions);
+    </script>
+</body>
+</html>
